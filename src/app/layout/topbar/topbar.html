@@ -1,0 +1,23 @@
+<p-toast />
+
+<div class="topbar">
+	<p-toolbar>
+		<ng-template #start>
+			<div class="brand-wrap">
+				<div>
+					<div class="topbar-logo">RivalRadar</div>
+					<div class="topbar-subtitle">Autonomous Competitive Intelligence</div>
+				</div>
+				<p-tag value="Live" severity="success" />
+			</div>
+		</ng-template>
+		<ng-template #end>
+			<p-button
+				label="Run All Agents"
+				icon="pi pi-play"
+				[loading]="runningAll"
+				(onClick)="runAllAgents()"
+			/>
+		</ng-template>
+	</p-toolbar>
+</div>

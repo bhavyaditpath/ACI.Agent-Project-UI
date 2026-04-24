@@ -1,0 +1,63 @@
+<div class="page-header">
+	<h1 class="page-title">Signal Feed</h1>
+</div>
+
+<div class="filter-row">
+	<p-select
+		[options]="competitorOptions"
+		[(ngModel)]="selectedCompetitor"
+		optionLabel="label"
+		optionValue="value"
+		placeholder="Competitor"
+		(onChange)="onCompetitorChange()"
+	></p-select>
+
+	<p-select
+		[options]="daysOptions"
+		[(ngModel)]="selectedDays"
+		optionLabel="label"
+		optionValue="value"
+		placeholder="Days"
+		(onChange)="onDaysChange()"
+	></p-select>
+
+	<p-select
+		[options]="agentOptions"
+		[(ngModel)]="selectedAgent"
+		optionLabel="label"
+		optionValue="value"
+		placeholder="Agent Type"
+		(onChange)="onAgentChange()"
+	></p-select>
+
+	<p-button label="Clear Filters" icon="pi pi-filter-slash" [outlined]="true" (onClick)="clearFilters()" />
+</div>
+
+@if (filteredSignals.length === 0) {
+	<p-message severity="info" text="No signals found for the selected filters" />
+} @else {
+	<div class="signals-grid">
+		@for (signal of filteredSignals; track signal.id) {
+			<p-card styleClass="signal-card">
+				<ng-template pTemplate="header">
+					<div class="signal-header">
+						<p-tag [value]="signal.agentType" [severity]="getAgentSeverity(signal.agentType)" />
+					</div>
+				</ng-template>
+
+				<h3>{{ signal.title }}</h3>
+				<p>{{ (signal.description || 'No description available').slice(0, 100) }}</p>
+
+				<div class="signal-footer">
+					<span>{{ signal.competitorName }}</span>
+					<span>{{ getImportanceStars(signal.importanceScore) }}</span>
+					<span>{{ getTimeAgo(signal.occurredAt) }}</span>
+				</div>
+
+				@if (signal.sourceUrl) {
+					<a [href]="signal.sourceUrl" target="_blank" rel="noopener noreferrer">Open Source</a>
+				}
+			</p-card>
+		}
+	</div>
+}

@@ -1,0 +1,27 @@
+.sidebar {
+	position: fixed;
+	left: 0;
+	top: 60px;
+	bottom: 0;
+	width: 250px;
+	background: #1e3a5f;
+	padding: 1rem 0.75rem;
+	overflow-y: auto;
+	z-index: 999;
+}
+
+:host ::ng-deep .rivalradar-menu .p-panelmenu-panel {
+	border: none;
+	background: transparent;
+}
+
+:host ::ng-deep .rivalradar-menu .p-panelmenu-header-link,
+:host ::ng-deep .rivalradar-menu .p-panelmenu-item-link {
+	color: #e5edf8;
+	border-radius: 8px;
+}
+
+:host ::ng-deep .rivalradar-menu .p-panelmenu-header-link:hover,
+:host ::ng-deep .rivalradar-menu .p-panelmenu-item-link:hover {
+	background: rgba(255, 255, 255, 0.12);
+}

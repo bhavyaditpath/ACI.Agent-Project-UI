@@ -1,0 +1,37 @@
+.topbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 60px;
+	z-index: 1000;
+	background: white;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+	display: flex;
+	align-items: center;
+	padding: 0 1.5rem;
+}
+
+:host ::ng-deep .p-toolbar {
+	width: 100%;
+	border: none;
+	padding: 0;
+	background: transparent;
+}
+
+.brand-wrap {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.topbar-logo {
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: #1e3a5f;
+}
+
+.topbar-subtitle {
+	font-size: 0.75rem;
+	color: #6b7280;
+}

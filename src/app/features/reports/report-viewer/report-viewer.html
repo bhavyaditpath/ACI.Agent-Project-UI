@@ -1,0 +1,77 @@
+<p-toast />
+
+<div class="page-header">
+	<h1 class="page-title">Intelligence Reports</h1>
+	<div class="filter-row" style="margin-bottom: 0;">
+		<p-button label="Generate Report" [outlined]="true" (onClick)="openGenerateDialog()" />
+		<p-button label="Generate All" icon="pi pi-cog" [loading]="generatingAll" (onClick)="generateAll()" />
+	</div>
+</div>
+
+<p-dialog
+	header="Generate Weekly Report"
+	[modal]="true"
+	[style]="{ width: '520px' }"
+	[(visible)]="dialogVisible"
+>
+	<div class="report-form">
+		<label>Competitor</label>
+		<p-select
+			[options]="competitorOptions"
+			optionLabel="label"
+			optionValue="value"
+			[(ngModel)]="selectedCompetitorId"
+			placeholder="Select Competitor"
+		></p-select>
+
+		<label>Week Start Date</label>
+		<p-datepicker [(ngModel)]="weekStartDate" dateFormat="yy-mm-dd" [showIcon]="true" />
+
+		<label>Week End Date</label>
+		<p-datepicker [(ngModel)]="weekEndDate" dateFormat="yy-mm-dd" [showIcon]="true" />
+	</div>
+	<ng-template pTemplate="footer">
+		<p-button label="Cancel" severity="secondary" (onClick)="dialogVisible = false" />
+		<p-button label="Generate" [loading]="generatingSingle" (onClick)="generateReport()" />
+	</ng-template>
+</p-dialog>
+
+@if (reports.length === 0) {
+	<p-message
+		severity="info"
+		text="No reports generated yet. Click Generate Report to create your first intelligence report."
+	/>
+} @else {
+	<p-accordion>
+		@for (report of reports; track report.id) {
+			<p-accordion-panel [value]="report.id">
+				<p-accordion-header>
+					{{ report.title }} • {{ report.generatedAt | date: 'mediumDate' }}
+				</p-accordion-header>
+				<p-accordion-content>
+					<h3>Summary</h3>
+					<p>{{ report.summary }}</p>
+
+					<h3>Key Insights</h3>
+					<ol class="icon-list">
+						@for (insight of report.keyInsights; track insight) {
+							<li><i class="pi pi-check-circle"></i> {{ insight }}</li>
+						}
+					</ol>
+
+					<h3>Recommendations</h3>
+					<ol class="icon-list">
+						@for (recommendation of report.recommendations; track recommendation) {
+							<li><i class="pi pi-arrow-right"></i> {{ recommendation }}</li>
+						}
+					</ol>
+
+					<p class="report-footer">
+						Total signals analyzed: {{ report.totalSignalsAnalyzed }}<br />
+						Generated at: {{ report.generatedAt | date: 'medium' }}
+					</p>
+				</p-accordion-content>
+			</p-accordion-panel>
+		}
+	</p-accordion>
+}
