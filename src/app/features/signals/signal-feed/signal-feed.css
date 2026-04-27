@@ -1,3 +1,17 @@
+.page-header {
+	margin-bottom: 18px;
+}
+
+.filter-row {
+	padding: 1rem;
+	margin-bottom: 1.25rem;
+	border-radius: var(--radius-lg);
+	background: var(--surface);
+	border: 1px solid var(--border-subtle);
+	box-shadow: var(--shadow-md);
+	backdrop-filter: blur(16px);
+}
+
 .signals-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -12,6 +26,64 @@
 	margin-top: 1rem;
 	display: flex;
 	justify-content: space-between;
+	gap: 0.75rem;
 	color: #4b5563;
 	font-size: 0.9rem;
+	flex-wrap: wrap;
+}
+
+.signal-card {
+	height: 100%;
+	border: 1px solid rgba(148, 163, 184, 0.16);
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(246, 250, 255, 0.86));
+}
+
+.signal-card h3 {
+	font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+	font-size: 1.05rem;
+	font-weight: 800;
+	letter-spacing: -0.03em;
+	color: var(--text-primary);
+	padding: 0 1rem;
+	margin-top: 0.5rem;
+}
+
+.signal-card p {
+	padding: 0 1rem;
+	margin-top: 0.5rem;
+	color: var(--text-secondary);
+	line-height: 1.6;
+}
+
+.signal-card a {
+	display: inline-flex;
+	margin: 1rem;
+	color: var(--brand-primary);
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.signal-card a:hover {
+	text-decoration: underline;
+}
+
+@media (max-width: 1024px) {
+	.filter-row {
+		padding: 0.85rem;
+	}
+
+	.signals-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 760px) {
+	.signals-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.signal-footer {
+		gap: 0.45rem;
+		font-size: 0.84rem;
+	}
 }

@@ -1,0 +1,19 @@
+.layout-backdrop {
+	position: fixed;
+	top: var(--topbar-height);
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border: none;
+	padding: 0;
+	margin: 0;
+	background: rgba(2, 12, 29, 0.48);
+	backdrop-filter: blur(2px);
+	z-index: 998;
+}
+
+@media (min-width: 1025px) {
+	.layout-backdrop {
+		display: none;
+	}
+}

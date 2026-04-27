@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { finalize } from 'rxjs';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -18,6 +18,9 @@ import { AgentService } from '../../core/services/agent';
 export class TopbarComponent {
   private readonly agentService = inject(AgentService);
   private readonly messageService = inject(MessageService);
+
+  readonly isDrawerOpen = input(false);
+  readonly menuToggle = output<void>();
 
   runningAll = false;
 
@@ -46,5 +49,9 @@ export class TopbarComponent {
           });
         }
       });
+  }
+
+  toggleMenu(): void {
+    this.menuToggle.emit();
   }
 }

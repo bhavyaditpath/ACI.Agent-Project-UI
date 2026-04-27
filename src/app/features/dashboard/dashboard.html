@@ -1,8 +1,41 @@
-<div class="page-header">
-	<h1 class="page-title">Dashboard</h1>
+<section class="page-header dashboard-header">
+	<div>
+		<h1 class="page-title">Dashboard</h1>
+		<p class="page-subtitle">
+			A polished command center for competitor activity, signal velocity, and weekly reporting.
+		</p>
+	</div>
+	<div class="dashboard-actions">
+		<p-button label="Run All Agents" icon="pi pi-play" (onClick)="runAllAgents()" />
+		<p-button label="Generate Reports" icon="pi pi-file" severity="contrast" (onClick)="generateReports()" />
+	</div>
+</section>
+
+<div class="dashboard-hero">
+	<div class="dashboard-hero-copy">
+		<div class="dashboard-eyebrow">Operational overview</div>
+		<h2>Track the highest-value signals without losing the bigger picture.</h2>
+		<p>
+			Review activity trends, launch agent runs, and jump directly into the parts of the workflow that need attention.
+		</p>
+	</div>
+	<div class="dashboard-hero-metrics">
+		<div class="hero-metric">
+			<span>Competitors</span>
+			<strong>{{ totalCompetitors }}</strong>
+		</div>
+		<div class="hero-metric">
+			<span>Signals</span>
+			<strong>{{ signalsThisWeek }}</strong>
+		</div>
+		<div class="hero-metric">
+			<span>Reports</span>
+			<strong>{{ reportsGenerated }}</strong>
+		</div>
+	</div>
 </div>
 
-<div class="grid-4">
+<div class="grid-4 dashboard-stats">
 	<p-card>
 		<div class="stat-card">
 			<div class="stat-number">{{ totalCompetitors }}</div>
@@ -29,7 +62,7 @@
 	</p-card>
 </div>
 
-<div class="grid-2">
+<div class="grid-2 dashboard-columns">
 	<p-card header="Recent Signals">
 		<p-table [value]="recentSignals" [tableStyle]="{ 'min-width': '100%' }">
 			<ng-template pTemplate="header">
@@ -80,9 +113,7 @@
 </div>
 
 <p-card header="Quick Actions">
-	<div class="filter-row">
-		<p-button label="Run All Agents" icon="pi pi-play" (onClick)="runAllAgents()" />
-		<p-button label="Generate Reports" icon="pi pi-file" severity="contrast" (onClick)="generateReports()" />
+	<div class="filter-row dashboard-actions-grid">
 		<p-button label="View Signals" icon="pi pi-bolt" [outlined]="true" (onClick)="viewSignals()" />
 		<p-button label="View Reports" icon="pi pi-file-word" [outlined]="true" (onClick)="viewReports()" />
 	</div>

@@ -1,27 +1,92 @@
 .sidebar {
 	position: fixed;
 	left: 0;
-	top: 60px;
+	top: var(--topbar-height);
 	bottom: 0;
-	width: 250px;
-	background: #1e3a5f;
-	padding: 1rem 0.75rem;
+	width: var(--sidebar-width);
+	padding: 1rem 0.9rem 1.15rem;
+	background:
+		linear-gradient(180deg, rgba(8, 24, 51, 0.98), rgba(13, 35, 74, 0.97)),
+		radial-gradient(circle at top left, rgba(24, 87, 255, 0.24), transparent 34%);
+	border-right: 1px solid rgba(255, 255, 255, 0.08);
 	overflow-y: auto;
 	z-index: 999;
+}
+
+.sidebar-hero {
+	padding: 1rem;
+	margin-bottom: 1rem;
+	border-radius: 18px;
+	background: rgba(255, 255, 255, 0.08);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(12px);
+	color: #f4f7ff;
+}
+
+.sidebar-kicker {
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(226, 236, 255, 0.74);
+}
+
+.sidebar-title {
+	margin-top: 0.35rem;
+	font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+	font-size: 1.15rem;
+	font-weight: 800;
+	letter-spacing: -0.03em;
+}
+
+.sidebar-hero p {
+	margin-top: 0.45rem;
+	font-size: 0.9rem;
+	line-height: 1.55;
+	color: rgba(228, 236, 255, 0.72);
 }
 
 :host ::ng-deep .rivalradar-menu .p-panelmenu-panel {
 	border: none;
 	background: transparent;
+	margin-bottom: 0.4rem;
 }
 
 :host ::ng-deep .rivalradar-menu .p-panelmenu-header-link,
 :host ::ng-deep .rivalradar-menu .p-panelmenu-item-link {
 	color: #e5edf8;
-	border-radius: 8px;
+	border-radius: 14px;
+	padding: 0.95rem 1rem;
+	transition: transform 0.18s ease, background 0.18s ease;
 }
 
 :host ::ng-deep .rivalradar-menu .p-panelmenu-header-link:hover,
 :host ::ng-deep .rivalradar-menu .p-panelmenu-item-link:hover {
 	background: rgba(255, 255, 255, 0.12);
+	transform: translateX(2px);
+	color: rgb(3, 12, 37);
+}
+
+:host ::ng-deep .rivalradar-menu .p-panelmenu-header-link.p-panelmenu-header-link-active,
+:host ::ng-deep .rivalradar-menu .p-panelmenu-item-link.p-panelmenu-item-link-active {
+	background: rgba(24, 87, 255, 0.2);
+	color: #ffffff;
+}
+
+:host ::ng-deep .rivalradar-menu .p-panelmenu-header-content,
+:host ::ng-deep .rivalradar-menu .p-panelmenu-content {
+	background: transparent;
+}
+
+@media (max-width: 1024px) {
+	.sidebar {
+		transform: translateX(calc(-1 * var(--sidebar-width) - 20px));
+		transition: transform 0.24s ease;
+		z-index: 999;
+		box-shadow: 24px 0 42px rgba(2, 12, 29, 0.34);
+	}
+
+	.sidebar.sidebar-open {
+		transform: translateX(0);
+	}
 }

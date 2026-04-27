@@ -8,9 +8,17 @@ import { TopbarComponent } from './layout/topbar/topbar';
   imports: [RouterOutlet, SidebarComponent, TopbarComponent],
   template: `
     <div class="layout-wrapper">
-      <app-topbar />
+      <app-topbar [isDrawerOpen]="mobileSidebarOpen" (menuToggle)="toggleMobileSidebar()" />
       <div class="layout-main">
-        <app-sidebar />
+        <app-sidebar [mobileOpen]="mobileSidebarOpen" (requestClose)="closeMobileSidebar()" />
+        @if (mobileSidebarOpen) {
+          <button
+            type="button"
+            class="layout-backdrop"
+            aria-label="Close navigation menu"
+            (click)="closeMobileSidebar()"
+          ></button>
+        }
         <div class="layout-content">
           <router-outlet />
         </div>
@@ -19,4 +27,14 @@ import { TopbarComponent } from './layout/topbar/topbar';
   `,
   styleUrl: './app.css'
 })
-export class AppComponent {}
+export class AppComponent {
+  mobileSidebarOpen = false;
+
+  toggleMobileSidebar(): void {
+    this.mobileSidebarOpen = !this.mobileSidebarOpen;
+  }
+
+  closeMobileSidebar(): void {
+    this.mobileSidebarOpen = false;
+  }
+}

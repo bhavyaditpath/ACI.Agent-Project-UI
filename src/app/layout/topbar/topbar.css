@@ -1,15 +1,8 @@
 .topbar {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 60px;
-	z-index: 1000;
-	background: white;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+	/* height: 100%; */
 	display: flex;
 	align-items: center;
-	padding: 0 1.5rem;
+	padding: 0 1rem;
 }
 
 :host ::ng-deep .p-toolbar {
@@ -17,12 +10,26 @@
 	border: none;
 	padding: 0;
 	background: transparent;
+	gap: 1rem;
 }
 
 .brand-wrap {
 	display: flex;
 	align-items: center;
 	gap: 0.75rem;
+	min-width: 0;
+}
+
+.brand-mark {
+	display: grid;
+	place-items: center;
+	width: 42px;
+	height: 42px;
+	border-radius: 14px;
+	background: linear-gradient(135deg, #1857ff, #0ea5e9);
+	color: white;
+	box-shadow: 0 12px 24px rgba(24, 87, 255, 0.28);
+	flex: 0 0 auto;
 }
 
 .topbar-logo {
@@ -32,6 +39,64 @@
 }
 
 .topbar-subtitle {
-	font-size: 0.75rem;
-	color: #6b7280;
+	font-size: 0.72rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: var(--text-secondary);
+	max-width: 320px;
+}
+
+.topbar-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+:host ::ng-deep .menu-toggle-btn {
+	display: none;
+}
+
+@media (max-width: 1024px) {
+	.topbar {
+		padding: 0 0.5rem;
+	}
+
+	:host ::ng-deep .menu-toggle-btn {
+		display: inline-flex;
+	}
+
+	.brand-mark {
+		width: 36px;
+		height: 36px;
+		border-radius: 12px;
+	}
+
+	.topbar-logo {
+		font-size: 1.1rem;
+	}
+
+	.topbar-subtitle {
+		max-width: 240px;
+		font-size: 0.68rem;
+	}
+}
+
+@media (max-width: 760px) {
+	.topbar {
+		padding: 0;
+	}
+
+	.topbar-subtitle {
+		display: none;
+	}
+
+	:host ::ng-deep .p-toolbar {
+		padding-inline: 0.25rem;
+	}
+
+	:host ::ng-deep .menu-toggle-btn {
+		width: 2.25rem;
+		height: 2.25rem;
+	}
 }

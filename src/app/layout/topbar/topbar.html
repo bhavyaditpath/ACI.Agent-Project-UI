@@ -4,20 +4,26 @@
 	<p-toolbar>
 		<ng-template #start>
 			<div class="brand-wrap">
+				<div class="brand-mark">
+					<i class="pi pi-sparkles"></i>
+				</div>
 				<div>
 					<div class="topbar-logo">RivalRadar</div>
-					<div class="topbar-subtitle">Autonomous Competitive Intelligence</div>
+					<div class="topbar-subtitle">Competitive intelligence command center</div>
 				</div>
 				<p-tag value="Live" severity="success" />
 			</div>
 		</ng-template>
 		<ng-template #end>
-			<p-button
-				label="Run All Agents"
-				icon="pi pi-play"
-				[loading]="runningAll"
-				(onClick)="runAllAgents()"
-			/>
+			<div class="topbar-actions">
+				<p-button
+					styleClass="menu-toggle-btn"
+					[icon]="isDrawerOpen() ? 'pi pi-times' : 'pi pi-bars'"
+					[outlined]="true"
+					ariaLabel="Toggle navigation menu"
+					(onClick)="toggleMenu()"
+				/>
+			</div>
 		</ng-template>
 	</p-toolbar>
 </div>

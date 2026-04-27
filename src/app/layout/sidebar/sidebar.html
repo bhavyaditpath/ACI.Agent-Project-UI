@@ -1,3 +1,8 @@
-<aside class="sidebar">
+<aside class="sidebar" [class.sidebar-open]="mobileOpen()" (click)="onSidebarClick($event)">
+	<div class="sidebar-hero">
+		<div class="sidebar-kicker">Workspace</div>
+		<div class="sidebar-title">Intelligence suite</div>
+		<p>Monitor competitor movement, signals, and weekly reporting from one control panel.</p>
+	</div>
 	<p-panelmenu [model]="items" styleClass="rivalradar-menu" />
 </aside>
