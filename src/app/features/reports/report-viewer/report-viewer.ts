@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { finalize, forkJoin } from 'rxjs';
@@ -38,8 +38,10 @@ export class ReportViewerComponent implements OnInit {
   private readonly reportService = inject(ReportService);
   private readonly competitorService = inject(CompetitorService);
   private readonly messageService = inject(MessageService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   reports: WeeklyReport[] = [];
+  reportCount = 0;
   competitors: Competitor[] = [];
   competitorOptions: Array<{ label: string; value: string }> = [];
 
@@ -58,11 +60,11 @@ export class ReportViewerComponent implements OnInit {
   loadPageData(): void {
     forkJoin({ reports: this.reportService.getAll(), competitors: this.competitorService.getAll() }).subscribe(
       ({ reports, competitors }) => {
-        setTimeout(() => {
-          this.reports = reports;
-          this.competitors = competitors;
-          this.competitorOptions = competitors.map((c) => ({ label: c.name, value: c.id }));
-        });
+        this.reports = reports;
+        this.reportCount = reports.length;
+        this.competitors = competitors;
+        this.competitorOptions = competitors.map((c) => ({ label: c.name, value: c.id }));
+        this.cdr.detectChanges();
       }
     );
   }

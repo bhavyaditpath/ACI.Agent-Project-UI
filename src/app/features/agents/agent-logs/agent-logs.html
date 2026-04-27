@@ -11,10 +11,10 @@
 		<div class="stat-card"><div class="stat-number">{{ totalRuns }}</div><div class="stat-label">Total Runs</div></div>
 	</p-card>
 	<p-card>
-		<div class="stat-card"><div class="stat-number">{{ completedRuns }}</div><div class="stat-label">Completed</div></div>
+		<div class="stat-card"><div class="stat-number">{{ completedCount }}</div><div class="stat-label">Completed</div></div>
 	</p-card>
 	<p-card>
-		<div class="stat-card"><div class="stat-number">{{ failedRuns }}</div><div class="stat-label">Failed</div></div>
+		<div class="stat-card"><div class="stat-number">{{ failedCount }}</div><div class="stat-label">Failed</div></div>
 	</p-card>
 	<p-card>
 		<div class="stat-card"><div class="stat-number">{{ totalSignalsCollected }}</div><div class="stat-label">Signals Collected</div></div>
@@ -28,6 +28,7 @@
 		optionLabel="label"
 		optionValue="value"
 		placeholder="Status"
+		(onChange)="onStatusChange()"
 	></p-select>
 	<p-select
 		[options]="agentOptions"
@@ -35,6 +36,7 @@
 		optionLabel="label"
 		optionValue="value"
 		placeholder="Agent Type"
+		(onChange)="onAgentChange()"
 	></p-select>
 </div>
 

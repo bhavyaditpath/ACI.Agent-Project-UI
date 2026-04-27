@@ -6,7 +6,7 @@
 	<p-button label="Add Competitor" icon="pi pi-plus" (onClick)="openCreateDialog()" />
 </div>
 
-<p-table [value]="competitors" [paginator]="true" [rows]="10" [tableStyle]="{ 'min-width': '100%' }">
+<p-table [value]="(competitors$ | async) ?? []" [paginator]="true" [rows]="10" [tableStyle]="{ 'min-width': '100%' }">
 	<ng-template pTemplate="header">
 		<tr>
 			<th>Name</th>

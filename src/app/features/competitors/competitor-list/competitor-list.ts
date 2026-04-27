@@ -1,7 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { finalize } from 'rxjs';
+import { Subject, finalize, startWith, switchMap } from 'rxjs';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -33,14 +33,18 @@ import { Competitor } from '../../../core/models/competitor.model';
   templateUrl: './competitor-list.html',
   styleUrl: './competitor-list.css',
 })
-export class CompetitorListComponent implements OnInit {
+export class CompetitorListComponent {
   private readonly competitorService = inject(CompetitorService);
   private readonly agentService = inject(AgentService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly messageService = inject(MessageService);
   private readonly formBuilder = inject(FormBuilder);
 
-  competitors: Competitor[] = [];
+  private readonly reloadCompetitors$ = new Subject<void>();
+  readonly competitors$ = this.reloadCompetitors$.pipe(
+    startWith(undefined),
+    switchMap(() => this.competitorService.getAll())
+  );
   dialogVisible = false;
   saving = false;
   selectedId: string | null = null;
@@ -51,18 +55,12 @@ export class CompetitorListComponent implements OnInit {
     description: ['']
   });
 
-  ngOnInit(): void {
-    this.loadCompetitors();
-  }
-
   get isEditMode(): boolean {
     return this.selectedId !== null;
   }
 
   loadCompetitors(): void {
-    this.competitorService.getAll().subscribe((data) => {
-      this.competitors = data;
-    });
+    this.reloadCompetitors$.next();
   }
 
   openCreateDialog(): void {

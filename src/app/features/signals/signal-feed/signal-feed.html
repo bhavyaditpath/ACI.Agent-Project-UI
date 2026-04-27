@@ -33,7 +33,7 @@
 	<p-button label="Clear Filters" icon="pi pi-filter-slash" [outlined]="true" (onClick)="clearFilters()" />
 </div>
 
-@if (filteredSignals.length === 0) {
+@if (filteredSignalsCount === 0) {
 	<p-message severity="info" text="No signals found for the selected filters" />
 } @else {
 	<div class="signals-grid">

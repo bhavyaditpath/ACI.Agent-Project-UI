@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
@@ -20,6 +20,7 @@ import { Signal } from '../../../core/models/signal.model';
 export class SignalFeedComponent implements OnInit {
   private readonly signalService = inject(SignalService);
   private readonly competitorService = inject(CompetitorService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly daysOptions = [
     { label: '7 days', value: 7 },
@@ -41,6 +42,7 @@ export class SignalFeedComponent implements OnInit {
 
   signals: Signal[] = [];
   filteredSignals: Signal[] = [];
+  filteredSignalsCount = 0;
 
   selectedCompetitor = 'all';
   selectedDays = 7;
@@ -58,6 +60,7 @@ export class SignalFeedComponent implements OnInit {
         { label: 'All Competitors', value: 'all' },
         ...competitors.map((c) => ({ label: c.name, value: c.id }))
       ];
+      this.cdr.detectChanges();
     });
   }
 
@@ -70,6 +73,7 @@ export class SignalFeedComponent implements OnInit {
     source$.subscribe((signals) => {
       this.signals = signals;
       this.applyClientFilters();
+      this.cdr.detectChanges();
     });
   }
 
@@ -100,6 +104,7 @@ export class SignalFeedComponent implements OnInit {
       const daysMatch = now - new Date(signal.occurredAt).getTime() <= daysMs;
       return agentMatch && daysMatch;
     });
+    this.filteredSignalsCount = this.filteredSignals.length;
   }
 
   getAgentSeverity(agentType: string): 'info' | 'success' | 'warn' | 'danger' | 'secondary' {

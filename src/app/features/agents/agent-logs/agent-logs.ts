@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { finalize, interval, Subscription } from 'rxjs';
@@ -30,10 +30,16 @@ import { AgentRunLog } from '../../../core/models/agent-run-log.model';
 })
 export class AgentLogsComponent implements OnInit, OnDestroy {
   private readonly agentService = inject(AgentService);
+  private readonly cdr = inject(ChangeDetectorRef);
   private refreshSubscription?: Subscription;
 
   logs: AgentRunLog[] = [];
+  filteredLogs: AgentRunLog[] = [];
   runningAll = false;
+  totalRuns = 0;
+  completedCount = 0;
+  failedCount = 0;
+  totalSignalsCollected = 0;
 
   readonly statusOptions = [
     { label: 'All', value: 'All' },
@@ -63,33 +69,35 @@ export class AgentLogsComponent implements OnInit, OnDestroy {
     this.refreshSubscription?.unsubscribe();
   }
 
-  get filteredLogs(): AgentRunLog[] {
-    return this.logs.filter((log) => {
-      const statusMatch = this.selectedStatus === 'All' || log.status === this.selectedStatus;
-      const agentMatch = this.selectedAgent === 'All' || log.agentType === this.selectedAgent;
-      return statusMatch && agentMatch;
-    });
+  onStatusChange(): void {
+    this.applyFilters();
   }
 
-  get totalRuns(): number {
-    return this.logs.length;
-  }
-
-  get completedRuns(): number {
-    return this.logs.filter((log) => log.status === 'Completed').length;
-  }
-
-  get failedRuns(): number {
-    return this.logs.filter((log) => log.status === 'Failed').length;
-  }
-
-  get totalSignalsCollected(): number {
-    return this.logs.reduce((sum, log) => sum + log.signalsCollected, 0);
+  onAgentChange(): void {
+    this.applyFilters();
   }
 
   loadLogs(): void {
     this.agentService.getLogs().subscribe((logs) => {
       this.logs = logs;
+      this.updateSummary();
+      this.applyFilters();
+      this.cdr.detectChanges();
+    });
+  }
+
+  private updateSummary(): void {
+    this.totalRuns = this.logs.length;
+    this.completedCount = this.logs.filter((log) => log.status === 'Completed').length;
+    this.failedCount = this.logs.filter((log) => log.status === 'Failed').length;
+    this.totalSignalsCollected = this.logs.reduce((sum, log) => sum + log.signalsCollected, 0);
+  }
+
+  private applyFilters(): void {
+    this.filteredLogs = this.logs.filter((log) => {
+      const statusMatch = this.selectedStatus === 'All' || log.status === this.selectedStatus;
+      const agentMatch = this.selectedAgent === 'All' || log.agentType === this.selectedAgent;
+      return statusMatch && agentMatch;
     });
   }
 

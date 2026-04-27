@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -28,28 +28,23 @@ export class DashboardComponent implements OnInit {
   private readonly agentService = inject(AgentService);
   private readonly reportService = inject(ReportService);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   loading = true;
   competitors: Competitor[] = [];
   signals: Signal[] = [];
   logs: AgentRunLog[] = [];
   reports: WeeklyReport[] = [];
+  recentSignals: Signal[] = [];
+  recentLogs: AgentRunLog[] = [];
+
+  totalCompetitors = 0;
+  signalsThisWeek = 0;
+  agentRunsToday = 0;
+  reportsGenerated = 0;
 
   ngOnInit(): void {
     this.loadDashboard();
-  }
-
-  get recentSignals(): Signal[] {
-    return [...this.signals].slice(0, 5);
-  }
-
-  get recentLogs(): AgentRunLog[] {
-    return [...this.logs].slice(0, 5);
-  }
-
-  get agentRunsToday(): number {
-    const today = new Date().toDateString();
-    return this.logs.filter((log) => new Date(log.startedAt).toDateString() === today).length;
   }
 
   loadDashboard(): void {
@@ -65,10 +60,23 @@ export class DashboardComponent implements OnInit {
         this.signals = signals;
         this.logs = logs;
         this.reports = reports;
+
+        this.recentSignals = signals.slice(0, 5);
+        this.recentLogs = logs.slice(0, 5);
+
+        this.totalCompetitors = competitors.length;
+        this.signalsThisWeek = signals.length;
+
+        const today = new Date().toDateString();
+        this.agentRunsToday = logs.filter((log) => new Date(log.startedAt).toDateString() === today).length;
+        this.reportsGenerated = reports.length;
+
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }

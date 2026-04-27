@@ -25,10 +25,10 @@
 		></p-select>
 
 		<label>Week Start Date</label>
-		<p-datepicker [(ngModel)]="weekStartDate" dateFormat="yy-mm-dd" [showIcon]="true" />
+		<p-datepicker [(ngModel)]="weekStartDate" dateFormat="yy-mm-dd" [showIcon]="true" appendTo="body" />
 
 		<label>Week End Date</label>
-		<p-datepicker [(ngModel)]="weekEndDate" dateFormat="yy-mm-dd" [showIcon]="true" />
+		<p-datepicker [(ngModel)]="weekEndDate" dateFormat="yy-mm-dd" [showIcon]="true" appendTo="body" />
 	</div>
 	<ng-template pTemplate="footer">
 		<p-button label="Cancel" severity="secondary" (onClick)="dialogVisible = false" />
@@ -36,7 +36,7 @@
 	</ng-template>
 </p-dialog>
 
-@if (reports.length === 0) {
+@if (reportCount === 0) {
 	<p-message
 		severity="info"
 		text="No reports generated yet. Click Generate Report to create your first intelligence report."
