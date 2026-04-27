@@ -140,7 +140,7 @@ export class AgentLogsComponent implements OnInit, OnDestroy {
       case 'JobBoard':
         return 'pi pi-briefcase';
       case 'RssFeed':
-        return 'pi pi-rss';
+        return 'pi pi-wifi';
       case 'Reddit':
         return 'pi pi-comments';
       case 'HackerNews':

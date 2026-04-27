@@ -1,5 +1,21 @@
-i {
-	margin-right: 0.5rem;
+.agent-type-cell {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-weight: 500;
+}
+
+.agent-type-cell i {
+	color: var(--brand-primary);
+	font-size: 1.1rem;
+}
+
+.whitespace-nowrap {
+	white-space: nowrap;
+}
+
+.text-secondary {
+	color: var(--text-secondary);
 }
 
 @media (max-width: 1024px) {

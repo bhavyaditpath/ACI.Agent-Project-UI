@@ -36,30 +36,22 @@
 </div>
 
 <div class="grid-4 dashboard-stats">
-	<p-card>
-		<div class="stat-card">
-			<div class="stat-number">{{ totalCompetitors }}</div>
-			<div class="stat-label">Total Competitors</div>
-		</div>
-	</p-card>
-	<p-card>
-		<div class="stat-card">
-			<div class="stat-number">{{ signalsThisWeek }}</div>
-			<div class="stat-label">Signals This Week</div>
-		</div>
-	</p-card>
-	<p-card>
-		<div class="stat-card">
-			<div class="stat-number">{{ agentRunsToday }}</div>
-			<div class="stat-label">Agent Runs Today</div>
-		</div>
-	</p-card>
-	<p-card>
-		<div class="stat-card">
-			<div class="stat-number">{{ reportsGenerated }}</div>
-			<div class="stat-label">Reports Generated</div>
-		</div>
-	</p-card>
+	<div class="content-section stat-card" style="margin-top: 0;">
+		<div class="stat-label"><i class="pi pi-building"></i> Total Competitors</div>
+		<div class="stat-number">{{ totalCompetitors }}</div>
+	</div>
+	<div class="content-section stat-card" style="margin-top: 0;">
+		<div class="stat-label"><i class="pi pi-bolt"></i> Signals This Week</div>
+		<div class="stat-number">{{ signalsThisWeek }}</div>
+	</div>
+	<div class="content-section stat-card" style="margin-top: 0;">
+		<div class="stat-label"><i class="pi pi-server"></i> Agent Runs Today</div>
+		<div class="stat-number">{{ agentRunsToday }}</div>
+	</div>
+	<div class="content-section stat-card" style="margin-top: 0;">
+		<div class="stat-label"><i class="pi pi-file"></i> Reports Generated</div>
+		<div class="stat-number">{{ reportsGenerated }}</div>
+	</div>
 </div>
 
 <div class="grid-2 dashboard-columns">

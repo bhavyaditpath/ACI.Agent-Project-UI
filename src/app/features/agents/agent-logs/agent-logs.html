@@ -7,18 +7,22 @@
 </div>
 
 <div class="grid-4">
-	<p-card>
-		<div class="stat-card"><div class="stat-number">{{ totalRuns }}</div><div class="stat-label">Total Runs</div></div>
-	</p-card>
-	<p-card>
-		<div class="stat-card"><div class="stat-number">{{ completedCount }}</div><div class="stat-label">Completed</div></div>
-	</p-card>
-	<p-card>
-		<div class="stat-card"><div class="stat-number">{{ failedCount }}</div><div class="stat-label">Failed</div></div>
-	</p-card>
-	<p-card>
-		<div class="stat-card"><div class="stat-number">{{ totalSignalsCollected }}</div><div class="stat-label">Signals Collected</div></div>
-	</p-card>
+	<div class="content-section stat-card" style="margin-top: 0;">
+		<div class="stat-label"><i class="pi pi-server"></i> Total Runs</div>
+		<div class="stat-number">{{ totalRuns }}</div>
+	</div>
+	<div class="content-section stat-card" style="margin-top: 0;">
+		<div class="stat-label"><i class="pi pi-check-circle" style="color: var(--success);"></i> Completed</div>
+		<div class="stat-number">{{ completedCount }}</div>
+	</div>
+	<div class="content-section stat-card" style="margin-top: 0;">
+		<div class="stat-label"><i class="pi pi-times-circle" style="color: #ef4444;"></i> Failed</div>
+		<div class="stat-number">{{ failedCount }}</div>
+	</div>
+	<div class="content-section stat-card" style="margin-top: 0;">
+		<div class="stat-label"><i class="pi pi-database"></i> Signals Collected</div>
+		<div class="stat-number">{{ totalSignalsCollected }}</div>
+	</div>
 </div>
 
 <div class="filter-row">
@@ -50,20 +54,25 @@
 			<th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
 			<th pSortableColumn="startedAt">Started At <p-sortIcon field="startedAt" /></th>
 			<th>Duration</th>
-			<th pSortableColumn="signalsCollected">Signals Collected <p-sortIcon field="signalsCollected" /></th>
+			<th pSortableColumn="signalsCollected">Signals <p-sortIcon field="signalsCollected" /></th>
 			<th>Error Message</th>
 		</tr>
 	</ng-template>
 	<ng-template pTemplate="body" let-log>
 		<tr>
-			<td><i [class]="getAgentIcon(log.agentType)"></i> {{ log.agentType }}</td>
+			<td>
+				<div class="agent-type-cell">
+					<i [class]="getAgentIcon(log.agentType)"></i>
+					<span>{{ log.agentType }}</span>
+				</div>
+			</td>
 			<td>{{ log.competitorName }}</td>
 			<td><p-tag [value]="log.status" [severity]="getStatusSeverity(log.status)" /></td>
-			<td>{{ log.startedAt | date: 'medium' }}</td>
+			<td><span class="whitespace-nowrap">{{ log.startedAt | date: 'MMM d, y, h:mm a' }}</span></td>
 			<td>{{ getDuration(log) }}</td>
-			<td><p-tag [value]="log.signalsCollected.toString()" severity="info" /></td>
+			<td><strong style="font-size: 1.1rem; padding-left: 0.5rem;">{{ log.signalsCollected }}</strong></td>
 			<td>
-				<span [pTooltip]="log.errorMessage || ''">{{ truncateError(log.errorMessage) }}</span>
+				<span [pTooltip]="log.errorMessage || ''" class="text-secondary">{{ truncateError(log.errorMessage) }}</span>
 			</td>
 		</tr>
 	</ng-template>

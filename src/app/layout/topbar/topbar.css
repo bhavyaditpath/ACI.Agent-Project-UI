@@ -25,24 +25,24 @@
 	place-items: center;
 	width: 42px;
 	height: 42px;
-	border-radius: 14px;
-	background: linear-gradient(135deg, #1857ff, #0ea5e9);
+	border-radius: 12px;
+	background: var(--brand-primary);
 	color: white;
-	box-shadow: 0 12px 24px rgba(24, 87, 255, 0.28);
+	box-shadow: 0 4px 6px -1px rgb(79 70 229 / 0.2);
 	flex: 0 0 auto;
 }
 
 .topbar-logo {
 	font-size: 1.25rem;
 	font-weight: 700;
-	color: #1e3a5f;
+	color: var(--text-primary);
 }
 
 .topbar-subtitle {
-	font-size: 0.72rem;
+	font-size: 0.75rem;
 	font-weight: 600;
 	text-transform: uppercase;
-	letter-spacing: 0.12em;
+	letter-spacing: 0.05em;
 	color: var(--text-secondary);
 	max-width: 320px;
 }
@@ -69,7 +69,7 @@
 	.brand-mark {
 		width: 36px;
 		height: 36px;
-		border-radius: 12px;
+		border-radius: 10px;
 	}
 
 	.topbar-logo {

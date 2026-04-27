@@ -33,12 +33,12 @@
 }
 
 :host ::ng-deep .p-dialog .p-dialog-content {
-	background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 250, 255, 0.92));
+	background: transparent;
 }
 
 :host ::ng-deep .p-accordion .p-accordion-header .p-accordion-header-link {
-	border-radius: 16px;
-	font-weight: 700;
+	border-radius: 12px;
+	font-weight: 600;
 }
 
 @media (max-width: 1024px) {

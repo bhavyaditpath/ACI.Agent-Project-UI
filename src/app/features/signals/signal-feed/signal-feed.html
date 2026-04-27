@@ -41,26 +41,32 @@
 } @else {
 	<div class="signals-grid">
 		@for (signal of filteredSignals; track signal.id) {
-			<p-card styleClass="signal-card">
-				<ng-template pTemplate="header">
-					<div class="signal-header">
-						<p-tag [value]="signal.agentType" [severity]="getAgentSeverity(signal.agentType)" />
-					</div>
-				</ng-template>
+			<div class="signal-card">
+				<div class="signal-header">
+					<p-tag [value]="signal.agentType" [severity]="getAgentSeverity(signal.agentType)" />
+					<span class="signal-time">{{ getTimeAgo(signal.occurredAt) }}</span>
+				</div>
 
-				<h3>{{ signal.title }}</h3>
-				<p>{{ (signal.description || 'No description available').slice(0, 100) }}</p>
+				<h3 [title]="signal.title">{{ signal.title }}</h3>
+				<p class="signal-desc">{{ (signal.description || 'No description available').slice(0, 100) }}...</p>
 
 				<div class="signal-footer">
-					<span>{{ signal.competitorName }}</span>
-					<span>{{ getImportanceStars(signal.importanceScore) }}</span>
-					<span>{{ getTimeAgo(signal.occurredAt) }}</span>
+					<div class="footer-left">
+						<i class="pi pi-building"></i>
+						<span>{{ signal.competitorName }}</span>
+					</div>
+					<div class="footer-right">
+						<i class="pi pi-star-fill" style="color: #fbbf24;"></i>
+						<span>{{ signal.importanceScore }} / 3</span>
+					</div>
 				</div>
 
 				@if (signal.sourceUrl) {
-					<a [href]="signal.sourceUrl" target="_blank" rel="noopener noreferrer">Open Source</a>
+					<a [href]="signal.sourceUrl" class="signal-link" target="_blank" rel="noopener noreferrer">
+						Open Source <i class="pi pi-arrow-up-right"></i>
+					</a>
 				}
-			</p-card>
+			</div>
 		}
 	</div>
 }
