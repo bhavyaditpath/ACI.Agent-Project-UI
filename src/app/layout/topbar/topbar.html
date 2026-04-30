@@ -16,6 +16,36 @@
 		</ng-template>
 		<ng-template #end>
 			<div class="topbar-actions">
+				<!-- Admin Action -->
+				<p-button
+					*ngIf="isAdmin"
+					label="Run All Agents"
+					icon="pi pi-play"
+					[loading]="runningAll"
+					(onClick)="runAllAgents()"
+					styleClass="p-button-sm p-button-secondary run-all-btn"
+				/>
+
+				<div class="user-profile" *ngIf="currentUser">
+					<div class="user-avatar">
+						{{ currentUser.username.charAt(0).toUpperCase() }}
+					</div>
+					<div class="user-details">
+						<span class="user-name">{{ currentUser.username }}</span>
+						<span class="user-role">{{ isAdmin ? 'Administrator' : 'Viewer' }}</span>
+					</div>
+				</div>
+
+				<p-button
+					icon="pi pi-power-off"
+					severity="danger"
+					[text]="true"
+					pTooltip="Sign Out"
+					tooltipPosition="bottom"
+					(onClick)="onLogout()"
+					styleClass="logout-btn"
+				/>
+
 				<p-button
 					styleClass="menu-toggle-btn"
 					[icon]="isDrawerOpen() ? 'pi pi-times' : 'pi pi-bars'"

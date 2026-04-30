@@ -1,0 +1,132 @@
+<div class="login-container">
+  <p-toast />
+
+  <!-- Left Side: Branding & Features -->
+  <div class="login-visual-panel">
+    <div class="visual-content">
+      <div class="brand-header">
+        <div class="brand-mark">
+          <i class="pi pi-bolt"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">RivalRadar</span>
+          <span class="brand-motto">Intelligence Suite</span>
+        </div>
+      </div>
+
+      <div class="hero-text">
+        <h1>Autonomous <br> Competitive <br> Intelligence</h1>
+        <p>Monitor competitor movement, signals, and weekly reporting from one control panel.</p>
+      </div>
+
+      <!-- Feature Preview (Aligning with Sidebar Components) -->
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon"><i class="pi pi-home"></i></div>
+          <div class="feature-info">
+            <div class="feature-title">Dashboard</div>
+            <div class="feature-desc">Real-time oversight</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="pi pi-building"></i></div>
+          <div class="feature-info">
+            <div class="feature-title">Competitors</div>
+            <div class="feature-desc">Strategic tracking</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="pi pi-bolt"></i></div>
+          <div class="feature-info">
+            <div class="feature-title">Signal Feed</div>
+            <div class="feature-desc">Instant alerts</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="pi pi-file-word"></i></div>
+          <div class="feature-info">
+            <div class="feature-title">Reports</div>
+            <div class="feature-desc">Deep-dive analysis</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="visual-footer">
+      &copy; 2026 RivalRadar. All rights reserved.
+    </div>
+  </div>
+
+  <!-- Right Side: Login Form -->
+  <div class="login-form-panel">
+    <div class="form-wrapper">
+      <div class="form-header">
+        <h2>Welcome back</h2>
+        <p>Please enter your credentials to continue</p>
+      </div>
+
+      <div class="login-form">
+        <div class="field">
+          <label for="username">Username</label>
+          <div class="input-with-icon">
+            <i class="pi pi-user input-icon"></i>
+            <input
+              id="username"
+              type="text"
+              pInputText
+              [(ngModel)]="username"
+              placeholder="Your username"
+              class="w-full"
+              (keyup.enter)="onLogin()"
+              autocomplete="username"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="input-with-icon">
+            <i class="pi pi-lock input-icon"></i>
+            <p-password
+              id="password"
+              [(ngModel)]="password"
+              placeholder="Your password"
+              [toggleMask]="true"
+              [feedback]="false"
+              styleClass="w-full"
+              [inputStyle]="{'width': '100%', 'padding-left': '2.75rem'}"
+              (keyup.enter)="onLogin()"
+              autocomplete="current-password"
+            />
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <div class="remember-me">
+            <p-checkbox [binary]="true" label="Remember me" inputId="remember"></p-checkbox>
+          </div>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <div class="error-msg" *ngIf="errorMessage">
+          <i class="pi pi-exclamation-circle"></i>
+          {{ errorMessage }}
+        </div>
+
+        <p-button
+          label="Sign In to Control Panel"
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          [loading]="isLoading"
+          (onClick)="onLogin()"
+          styleClass="w-full login-btn"
+        />
+      </div>
+
+      <div class="form-footer">
+        Having trouble? <a href="#">Contact Support</a>
+      </div>
+    </div>
+  </div>
+</div>
+

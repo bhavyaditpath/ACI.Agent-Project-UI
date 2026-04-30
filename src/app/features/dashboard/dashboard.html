@@ -1,3 +1,5 @@
+<p-toast />
+
 <section class="page-header dashboard-header">
 	<div>
 		<h1 class="page-title">Dashboard</h1>
@@ -6,8 +8,7 @@
 		</p>
 	</div>
 	<div class="dashboard-actions">
-		<p-button label="Run All Agents" icon="pi pi-play" (onClick)="runAllAgents()" />
-		<p-button label="Generate Reports" icon="pi pi-file" severity="contrast" (onClick)="generateReports()" />
+		<!-- Note: These admin-only buttons are on topbar now, but we can optionally show them here too -->
 	</div>
 </section>
 

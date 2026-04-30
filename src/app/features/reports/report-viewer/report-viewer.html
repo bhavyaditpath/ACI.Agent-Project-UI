@@ -3,8 +3,19 @@
 <div class="page-header">
 	<h1 class="page-title">Intelligence Reports</h1>
 	<div class="filter-row" style="margin-bottom: 0;">
-		<p-button label="Generate Report" [outlined]="true" (onClick)="openGenerateDialog()" />
-		<p-button label="Generate All" icon="pi pi-cog" [loading]="generatingAll" (onClick)="generateAll()" />
+		<p-button
+			*ngIf="isAdmin"
+			label="Generate Report"
+			[outlined]="true"
+			(onClick)="openGenerateDialog()"
+		/>
+		<p-button
+			*ngIf="isAdmin"
+			label="Generate All"
+			icon="pi pi-cog"
+			[loading]="generatingAll"
+			(onClick)="generateAll()"
+		/>
 	</div>
 </div>
 

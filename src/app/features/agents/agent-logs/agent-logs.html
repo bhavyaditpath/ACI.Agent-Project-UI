@@ -1,7 +1,15 @@
+<p-toast />
+
 <div class="page-header">
 	<h1 class="page-title">Agent Observability</h1>
 	<div class="filter-row" style="margin-bottom: 0;">
-		<p-button label="Run All Agents" icon="pi pi-play" [loading]="runningAll" (onClick)="runAllAgents()" />
+		<p-button
+			*ngIf="isAdmin"
+			label="Run All Agents"
+			icon="pi pi-play"
+			[loading]="runningAll"
+			(onClick)="runAllAgents()"
+		/>
 		<p-button label="Refresh" icon="pi pi-refresh" [outlined]="true" (onClick)="refresh()" />
 	</div>
 </div>

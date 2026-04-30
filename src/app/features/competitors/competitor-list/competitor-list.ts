@@ -13,6 +13,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CompetitorService } from '../../../core/services/competitor';
 import { AgentService } from '../../../core/services/agent';
+import { Auth } from '../../../core/services/auth';
 import { Competitor } from '../../../core/models/competitor.model';
 
 @Component({
@@ -36,9 +37,14 @@ import { Competitor } from '../../../core/models/competitor.model';
 export class CompetitorListComponent {
   private readonly competitorService = inject(CompetitorService);
   private readonly agentService = inject(AgentService);
+  private readonly authService = inject(Auth);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly messageService = inject(MessageService);
   private readonly formBuilder = inject(FormBuilder);
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
 
   private readonly reloadCompetitors$ = new Subject<void>();
   readonly competitors$ = this.reloadCompetitors$.pipe(
@@ -96,24 +102,46 @@ export class CompetitorListComponent {
       ? this.competitorService.update(this.selectedId, payload)
       : this.competitorService.create(payload);
 
-    request$.pipe(finalize(() => (this.saving = false))).subscribe(() => {
-      this.dialogVisible = false;
-      this.loadCompetitors();
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Saved',
-        detail: this.selectedId ? 'Competitor updated.' : 'Competitor created.'
-      });
+    request$.pipe(finalize(() => (this.saving = false))).subscribe({
+      next: () => {
+        this.dialogVisible = false;
+        this.loadCompetitors();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Saved',
+          detail: this.selectedId ? 'Competitor updated.' : 'Competitor created.',
+          life: 3000
+        });
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to save competitor.',
+          life: 5000
+        });
+      }
     });
   }
 
   runAgents(competitor: Competitor): void {
-    this.agentService.runForCompetitor(competitor.id).subscribe(() => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Agent Run Started',
-        detail: `Agents started for ${competitor.name}.`
-      });
+    this.agentService.runForCompetitor(competitor.id).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Agent Run Started',
+          detail: `Agents started for ${competitor.name}.`,
+          life: 3000
+        });
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to start agents.',
+          life: 5000
+        });
+      }
     });
   }
 
@@ -123,13 +151,24 @@ export class CompetitorListComponent {
       header: 'Confirm Delete',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.competitorService.delete(competitor.id).subscribe(() => {
-          this.loadCompetitors();
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Deleted',
-            detail: 'Competitor deleted successfully.'
-          });
+        this.competitorService.delete(competitor.id).subscribe({
+          next: () => {
+            this.loadCompetitors();
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Deleted',
+              detail: 'Competitor deleted successfully.',
+              life: 3000
+            });
+          },
+          error: () => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete competitor.',
+              life: 5000
+            });
+          }
         });
       }
     });

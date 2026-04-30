@@ -13,6 +13,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ReportService } from '../../../core/services/report';
 import { CompetitorService } from '../../../core/services/competitor';
+import { Auth } from '../../../core/services/auth';
 import { WeeklyReport } from '../../../core/models/weekly-report.model';
 import { Competitor } from '../../../core/models/competitor.model';
 
@@ -37,8 +38,13 @@ import { Competitor } from '../../../core/models/competitor.model';
 export class ReportViewerComponent implements OnInit {
   private readonly reportService = inject(ReportService);
   private readonly competitorService = inject(CompetitorService);
+  private readonly authService = inject(Auth);
   private readonly messageService = inject(MessageService);
   private readonly cdr = inject(ChangeDetectorRef);
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
 
   reports: WeeklyReport[] = [];
   reportCount = 0;
@@ -82,13 +88,24 @@ export class ReportViewerComponent implements OnInit {
     this.reportService
       .generateAll()
       .pipe(finalize(() => (this.generatingAll = false)))
-      .subscribe(() => {
-        this.loadPageData();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Reports Generated',
-          detail: 'All competitor reports generated successfully.'
-        });
+      .subscribe({
+        next: () => {
+          this.loadPageData();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Reports Generated',
+            detail: 'All competitor reports generated successfully.',
+            life: 3000
+          });
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to generate reports.',
+            life: 5000
+          });
+        }
       });
   }
 
@@ -110,14 +127,25 @@ export class ReportViewerComponent implements OnInit {
         weekEndDate: this.toIsoDate(this.weekEndDate)
       })
       .pipe(finalize(() => (this.generatingSingle = false)))
-      .subscribe(() => {
-        this.dialogVisible = false;
-        this.loadPageData();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Report Generated',
-          detail: 'Weekly report generated successfully.'
-        });
+      .subscribe({
+        next: () => {
+          this.dialogVisible = false;
+          this.loadPageData();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Report Generated',
+            detail: 'Weekly report generated successfully.',
+            life: 3000
+          });
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to generate report.',
+            life: 5000
+          });
+        }
       });
   }
 

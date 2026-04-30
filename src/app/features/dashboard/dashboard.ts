@@ -7,6 +7,8 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { CompetitorService } from '../../core/services/competitor';
 import { SignalService } from '../../core/services/signal';
 import { AgentService } from '../../core/services/agent';
@@ -18,7 +20,8 @@ import { WeeklyReport } from '../../core/models/weekly-report.model';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterModule, CardModule, TableModule, TagModule, ButtonModule, SkeletonModule],
+  imports: [CommonModule, RouterModule, CardModule, TableModule, TagModule, ButtonModule, SkeletonModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -27,6 +30,7 @@ export class DashboardComponent implements OnInit {
   private readonly signalService = inject(SignalService);
   private readonly agentService = inject(AgentService);
   private readonly reportService = inject(ReportService);
+  private readonly messageService = inject(MessageService);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -76,17 +80,59 @@ export class DashboardComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load dashboard data.',
+          life: 5000
+        });
         this.cdr.detectChanges();
       }
     });
   }
 
   runAllAgents(): void {
-    this.agentService.runAll().subscribe(() => this.loadDashboard());
+    this.agentService.runAll().subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Agents Started',
+          detail: 'All agents have been started.',
+          life: 3000
+        });
+        this.loadDashboard();
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to start agents.',
+          life: 5000
+        });
+      }
+    });
   }
 
   generateReports(): void {
-    this.reportService.generateAll().subscribe(() => this.loadDashboard());
+    this.reportService.generateAll().subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Reports Generated',
+          detail: 'All reports have been generated.',
+          life: 3000
+        });
+        this.loadDashboard();
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to generate reports.',
+          life: 5000
+        });
+      }
+    });
   }
 
   viewSignals(): void {

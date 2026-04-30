@@ -5,4 +5,14 @@
 		<p>Monitor competitor movement, signals, and weekly reporting from one control panel.</p>
 	</div>
 	<p-panelmenu [model]="items" styleClass="rivalradar-menu" />
+
+	<div class="sidebar-footer">
+		<p-button
+			label="Sign Out"
+			icon="pi pi-power-off"
+			[text]="true"
+			styleClass="w-full sidebar-logout-btn"
+			(onClick)="onLogout()"
+		/>
+	</div>
 </aside>

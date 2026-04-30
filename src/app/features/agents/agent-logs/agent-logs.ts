@@ -9,7 +9,10 @@ import { CardModule } from 'primeng/card';
 import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { AgentService } from '../../../core/services/agent';
+import { Auth } from '../../../core/services/auth';
 import { AgentRunLog } from '../../../core/models/agent-run-log.model';
 
 @Component({
@@ -23,15 +26,23 @@ import { AgentRunLog } from '../../../core/models/agent-run-log.model';
     CardModule,
     SelectModule,
     TooltipModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './agent-logs.html',
   styleUrl: './agent-logs.css',
 })
 export class AgentLogsComponent implements OnInit, OnDestroy {
   private readonly agentService = inject(AgentService);
+  private readonly authService = inject(Auth);
+  private readonly messageService = inject(MessageService);
   private readonly cdr = inject(ChangeDetectorRef);
   private refreshSubscription?: Subscription;
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
 
   logs: AgentRunLog[] = [];
   filteredLogs: AgentRunLog[] = [];
@@ -110,7 +121,25 @@ export class AgentLogsComponent implements OnInit, OnDestroy {
     this.agentService
       .runAll()
       .pipe(finalize(() => (this.runningAll = false)))
-      .subscribe(() => this.loadLogs());
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Agents Started',
+            detail: 'All agents have been started.',
+            life: 3000
+          });
+          this.loadLogs();
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to start agents.',
+            life: 5000
+          });
+        }
+      });
   }
 
   refresh(): void {

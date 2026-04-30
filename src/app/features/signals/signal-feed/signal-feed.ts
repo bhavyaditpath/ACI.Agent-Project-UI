@@ -6,6 +6,8 @@ import { SelectModule } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { CompetitorService } from '../../../core/services/competitor';
 import { SignalService } from '../../../core/services/signal';
 import { Competitor } from '../../../core/models/competitor.model';
@@ -13,13 +15,15 @@ import { Signal } from '../../../core/models/signal.model';
 
 @Component({
   selector: 'app-signal-feed',
-  imports: [CommonModule, FormsModule, CardModule, SelectModule, TagModule, ButtonModule, MessageModule],
+  imports: [CommonModule, FormsModule, CardModule, SelectModule, TagModule, ButtonModule, MessageModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './signal-feed.html',
   styleUrl: './signal-feed.css',
 })
 export class SignalFeedComponent implements OnInit {
   private readonly signalService = inject(SignalService);
   private readonly competitorService = inject(CompetitorService);
+  private readonly messageService = inject(MessageService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   readonly daysOptions = [

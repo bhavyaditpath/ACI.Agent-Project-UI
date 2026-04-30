@@ -9,6 +9,8 @@
 	border-right: 1px solid var(--border-subtle);
 	overflow-y: auto;
 	z-index: 999;
+	display: flex;
+	flex-direction: column;
 }
 
 .sidebar-hero {
@@ -84,4 +86,26 @@
 	.sidebar.sidebar-open {
 		transform: translateX(0);
 	}
+}
+
+.sidebar-footer {
+	margin-top: auto;
+	padding-top: 1rem;
+	border-top: 1px solid var(--border-subtle);
+}
+
+:host ::ng-deep .sidebar-logout-btn {
+	color: #94a3b8 !important;
+	justify-content: flex-start !important;
+	padding: 0.85rem 1rem !important;
+	border-radius: 8px !important;
+}
+
+:host ::ng-deep .sidebar-logout-btn:hover {
+	background: rgba(239, 68, 68, 0.1) !important;
+	color: #f87171 !important;
+}
+
+:host ::ng-deep .sidebar-logout-btn .p-button-icon {
+	margin-right: 0.5rem;
 }
