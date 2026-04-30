@@ -1,59 +1,61 @@
-<p-toast />
-
 <div class="topbar">
 	<p-toolbar>
 		<ng-template #start>
-			<div class="brand-wrap">
-				<div class="brand-mark">
+			<div class="brand-group">
+				<div class="brand-icon">
 					<i class="pi pi-sparkles"></i>
 				</div>
-				<div>
-					<div class="topbar-logo">RivalRadar</div>
-					<div class="topbar-subtitle">Competitive intelligence command center</div>
+				<div class="brand-info">
+					<span class="brand-name">RivalRadar</span>
+					<span class="brand-subtitle">COMPETITIVE INTELLIGENCE COMMAND CENTER</span>
 				</div>
-				<p-tag value="Live" severity="success" />
+				<p-tag value="Live" severity="success" [rounded]="true" styleClass="live-tag" />
 			</div>
 		</ng-template>
+
 		<ng-template #end>
 			<div class="topbar-actions">
-				<!-- Admin Action -->
+				<!-- Action Button -->
 				<p-button
 					*ngIf="isAdmin"
 					label="Run All Agents"
 					icon="pi pi-play"
+					styleClass="run-agents-action"
 					[loading]="runningAll"
 					(onClick)="runAllAgents()"
-					styleClass="p-button-sm p-button-secondary run-all-btn"
 				/>
 
-				<div class="user-profile" *ngIf="currentUser">
-					<div class="user-avatar">
-						{{ currentUser.username.charAt(0).toUpperCase() }}
-					</div>
-					<div class="user-details">
-						<span class="user-name">{{ currentUser.username }}</span>
-						<span class="user-role">{{ isAdmin ? 'Administrator' : 'Viewer' }}</span>
-					</div>
+				<div class="v-divider"></div>
+
+				<!-- User Section -->
+				<div class="user-info-group">
+					<span class="user-label">{{ currentUser?.username }}</span>
+					<p-tag 
+						[value]="currentUser?.role" 
+						severity="info"
+						[rounded]="true"
+						styleClass="user-tag"
+					/>
 				</div>
 
+				<!-- Logout -->
 				<p-button
-					icon="pi pi-power-off"
-					severity="danger"
+					icon="pi pi-sign-out"
+					styleClass="logout-action-btn"
 					[text]="true"
-					pTooltip="Sign Out"
+					pTooltip="Logout"
 					tooltipPosition="bottom"
 					(onClick)="onLogout()"
-					styleClass="logout-btn"
 				/>
 
 				<p-button
 					styleClass="menu-toggle-btn"
 					[icon]="isDrawerOpen() ? 'pi pi-times' : 'pi pi-bars'"
 					[outlined]="true"
-					ariaLabel="Toggle navigation menu"
 					(onClick)="toggleMenu()"
 				/>
 			</div>
 		</ng-template>
 	</p-toolbar>
 </div>
+

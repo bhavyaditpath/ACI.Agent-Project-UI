@@ -53,103 +53,147 @@
 	gap: 1.25rem;
 }
 
-.user-profile {
+/* --- Brand Section --- */
+.brand-group {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.brand-icon {
+	display: grid;
+	place-items: center;
+	width: 38px;
+	height: 38px;
+	border-radius: 10px;
+	background: var(--brand-primary);
+	color: white;
+	box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+}
+
+.brand-info {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+}
+
+.brand-name {
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: #0f172a;
+	letter-spacing: -0.01em;
+	line-height: 1;
+}
+
+.brand-subtitle {
+	font-size: 0.65rem;
+	font-weight: 600;
+	color: #64748b;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+
+:host ::ng-deep .live-tag {
+	margin-left: 0.5rem;
+	font-size: 0.65rem;
+	font-weight: 700;
+	padding: 0.2rem 0.6rem;
+}
+
+/* --- Actions --- */
+:host ::ng-deep .run-agents-action {
+	background: #10b981 !important;
+	border: none !important;
+	border-radius: 8px !important;
+	padding: 0.5rem 1rem !important;
+	font-weight: 600 !important;
+	transition: all 0.2s;
+}
+
+:host ::ng-deep .run-agents-action:not(:disabled):hover {
+	background: #059669 !important;
+	transform: translateY(-1px);
+	box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+}
+
+.v-divider {
+	width: 1px;
+	height: 24px;
+	background: var(--border-subtle);
+	margin: 0 0.25rem;
+}
+
+/* --- User Section --- */
+.user-info-group {
 	display: flex;
 	align-items: center;
 	gap: 0.75rem;
-	padding: 0.25rem 0.5rem;
-	border-radius: 2rem;
-	background: #f8fafc;
-	border: 1px solid var(--border-subtle);
 }
 
-.user-avatar {
-	width: 32px;
-	height: 32px;
-	border-radius: 50%;
-	background: var(--brand-primary);
-	color: white;
-	display: grid;
-	place-items: center;
-	font-weight: 700;
-	font-size: 0.85rem;
-	box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
-}
-
-.user-details {
-	display: flex;
-	flex-direction: column;
-	min-width: 0;
-}
-
-.user-name {
-	font-size: 0.85rem;
+.user-label {
+	font-size: 0.9rem;
 	font-weight: 600;
-	color: var(--text-primary);
-	line-height: 1.2;
+	color: #0f172a;
 }
 
-.user-role {
+:host ::ng-deep .user-tag {
 	font-size: 0.7rem;
-	font-weight: 500;
-	color: var(--text-secondary);
+	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.02em;
+	padding: 0.2rem 0.6rem;
 }
 
-:host ::ng-deep .logout-btn {
-	width: 2.5rem;
-	height: 2.5rem;
+/* --- Logout --- */
+:host ::ng-deep .logout-action-btn {
+	width: 34px;
+	height: 34px;
+	color: #64748b !important;
+	border-radius: 50% !important;
+	transition: all 0.2s ease;
 }
 
-:host ::ng-deep .run-all-btn {
-	margin-right: 0.5rem;
+:host ::ng-deep .logout-action-btn:hover {
+	background: #f1f5f9 !important;
+	color: #0f172a !important;
+	transform: scale(1.1);
 }
 
+/* --- Mobile / Drawer --- */
 :host ::ng-deep .menu-toggle-btn {
 	display: none;
 }
 
 @media (max-width: 1024px) {
-	.topbar {
-		padding: 0 0.5rem;
+	.brand-subtitle, .v-divider {
+		display: none;
+	}
+
+	.user-label {
+		display: none;
+	}
+
+	:host ::ng-deep .run-agents-action .p-button-label {
+		display: none;
+	}
+
+	:host ::ng-deep .run-agents-action {
+		width: 36px;
+		height: 36px;
+		padding: 0 !important;
 	}
 
 	:host ::ng-deep .menu-toggle-btn {
 		display: inline-flex;
 	}
-
-	.brand-mark {
-		width: 36px;
-		height: 36px;
-		border-radius: 10px;
-	}
-
-	.topbar-logo {
-		font-size: 1.1rem;
-	}
-
-	.topbar-subtitle {
-		max-width: 240px;
-		font-size: 0.68rem;
-	}
 }
 
 @media (max-width: 760px) {
-	.topbar {
-		padding: 0;
+	.brand-group {
+		gap: 0.5rem;
 	}
-
-	.topbar-subtitle {
+	
+	:host ::ng-deep .live-tag {
 		display: none;
-	}
-
-	:host ::ng-deep .p-toolbar {
-		padding-inline: 0.25rem;
-	}
-
-	:host ::ng-deep .menu-toggle-btn {
-		width: 2.25rem;
-		height: 2.25rem;
 	}
 }
