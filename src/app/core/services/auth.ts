@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { LoginRequest, LoginResponse, RegisterRequest } from '../models/auth.model';
+import { LoginRequest, LoginResponse, RegisterRequest, UserRole } from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -71,7 +71,7 @@ export class Auth {
 
   isAdmin(): boolean {
     const user = this.getCurrentUser();
-    return user?.role === 'Admin';
+    return user?.role === UserRole.Admin;
   }
 }
 
