@@ -4,7 +4,16 @@
 		<div class="sidebar-title">Intelligence suite</div>
 		<p>Monitor competitor movement, signals, and weekly reporting from one control panel.</p>
 	</div>
-	<p-panelmenu [model]="items" styleClass="rivalradar-menu" />
+	<div class="sidebar-menu">
+		<a *ngFor="let item of items" 
+		   [routerLink]="item.routerLink"
+		   routerLinkActive="active"
+		   [routerLinkActiveOptions]="{ exact: true }"
+		   class="menu-item">
+			<i [class]="item.icon"></i>
+			<span>{{ item.label }}</span>
+		</a>
+	</div>
 
 	<div class="sidebar-footer">
 		<p-button

@@ -1,5 +1,6 @@
-import { Component, inject, input, output } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject, input, output, signal, effect } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { ButtonModule } from 'primeng/button';
 import { MenuItem } from 'primeng/api';
@@ -7,15 +8,17 @@ import { Auth } from '../../core/services/auth';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterModule, PanelMenuModule, ButtonModule],
+  imports: [CommonModule, RouterModule, PanelMenuModule, ButtonModule],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
 export class SidebarComponent {
   private readonly authService = inject(Auth);
+  private readonly router = inject(Router);
 
   readonly mobileOpen = input(false);
   readonly requestClose = output<void>();
+  readonly activeRoute = signal<string>('');
 
   readonly items: MenuItem[] = [
     { label: 'Dashboard', icon: 'pi pi-home', routerLink: ['/dashboard'] },
@@ -25,8 +28,21 @@ export class SidebarComponent {
     { label: 'Agent Logs', icon: 'pi pi-server', routerLink: ['/agents'] }
   ];
 
+  constructor() {
+    effect(() => {
+      const route = this.router.url.split('/')[1] || 'dashboard';
+      this.activeRoute.set(route);
+    });
+  }
+
   onLogout(): void {
     this.authService.logout();
+  }
+
+  isMenuItemActive(routePath: string): boolean {
+    if (!routePath) return false;
+    const route = routePath.split('/')[1] || 'dashboard';
+    return this.activeRoute() === route;
   }
 
   onSidebarClick(event: Event): void {
@@ -35,7 +51,7 @@ export class SidebarComponent {
       return;
     }
 
-    const clickedMenuLink = target.closest('.p-panelmenu-item-link, .p-panelmenu-header-link');
+    const clickedMenuLink = target.closest('.menu-item');
     if (clickedMenuLink) {
       this.requestClose.emit();
     }

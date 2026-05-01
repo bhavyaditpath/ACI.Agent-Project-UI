@@ -44,35 +44,44 @@
 	color: #cbd5e1;
 }
 
-:host ::ng-deep .rivalradar-menu .p-panelmenu-panel {
-	border: none;
-	background: transparent;
-	margin-bottom: 0.4rem;
+.sidebar-menu {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	margin-bottom: 1rem;
 }
 
-:host ::ng-deep .rivalradar-menu .p-panelmenu-header-link,
-:host ::ng-deep .rivalradar-menu .p-panelmenu-item-link {
-	color: #cbd5e1;
-	border-radius: 8px;
+.menu-item {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
 	padding: 0.85rem 1rem;
+	color: #cbd5e1;
+	text-decoration: none;
+	border-radius: 8px;
 	transition: background 0.15s ease, color 0.15s ease;
+	cursor: pointer;
+	font-size: 0.95rem;
 }
 
-:host ::ng-deep .rivalradar-menu .p-panelmenu-header-link:hover,
-:host ::ng-deep .rivalradar-menu .p-panelmenu-item-link:hover {
+.menu-item:hover {
 	background: #1e293b;
 	color: #f8fafc;
 }
 
-:host ::ng-deep .rivalradar-menu .p-panelmenu-header-link.p-panelmenu-header-link-active,
-:host ::ng-deep .rivalradar-menu .p-panelmenu-item-link.p-panelmenu-item-link-active {
+.menu-item.active {
 	background: var(--brand-primary);
 	color: #ffffff;
+	font-weight: 600;
 }
 
-:host ::ng-deep .rivalradar-menu .p-panelmenu-header-content,
-:host ::ng-deep .rivalradar-menu .p-panelmenu-content {
-	background: transparent;
+.menu-item i {
+	font-size: 1.1rem;
+	width: 1.25rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 @media (max-width: 1024px) {

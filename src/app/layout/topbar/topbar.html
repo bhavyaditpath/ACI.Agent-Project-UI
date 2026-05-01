@@ -27,26 +27,25 @@
 
 				<div class="v-divider"></div>
 
-				<!-- User Section -->
-				<div class="user-info-group">
-					<span class="user-label">{{ currentUser?.username }}</span>
-					<p-tag 
-						[value]="currentUser?.role" 
-						severity="info"
+				<!-- User Profile Section -->
+				<div class="user-profile-section">
+					<div class="user-avatar">
+						{{ (currentUser?.username || 'U')[0].toUpperCase() }}
+					</div>
+					<div class="user-details">
+						<div class="user-name">{{ currentUser?.username }}</div>
+						<div class="user-role">{{ currentUser?.role }}</div>
+					</div>
+					<p-button
+						icon="pi pi-sign-out"
+						styleClass="logout-btn"
 						[rounded]="true"
-						styleClass="user-tag"
+						[text]="true"
+						pTooltip="Sign Out"
+						tooltipPosition="bottom"
+						(onClick)="onLogout()"
 					/>
 				</div>
-
-				<!-- Logout -->
-				<p-button
-					icon="pi pi-sign-out"
-					styleClass="logout-action-btn"
-					[text]="true"
-					pTooltip="Logout"
-					tooltipPosition="bottom"
-					(onClick)="onLogout()"
-				/>
 
 				<p-button
 					styleClass="menu-toggle-btn"
