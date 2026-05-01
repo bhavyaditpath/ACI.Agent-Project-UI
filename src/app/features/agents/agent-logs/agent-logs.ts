@@ -63,7 +63,7 @@ export class AgentLogsComponent implements OnInit, OnDestroy {
     { label: 'All', value: 'All' },
     { label: 'WebWatcher', value: 'WebWatcher' },
     { label: 'JobBoard', value: 'JobBoard' },
-    { label: 'RssFeed', value: 'RssFeed' },
+    // { label: 'RssFeed', value: 'RssFeed' },
     { label: 'Reddit', value: 'Reddit' },
     { label: 'HackerNews', value: 'HackerNews' }
   ];
@@ -168,8 +168,8 @@ export class AgentLogsComponent implements OnInit, OnDestroy {
         return 'pi pi-globe';
       case 'JobBoard':
         return 'pi pi-briefcase';
-      case 'RssFeed':
-        return 'pi pi-wifi';
+      // case 'RssFeed':
+      //   return 'pi pi-wifi';
       case 'Reddit':
         return 'pi pi-comments';
       case 'HackerNews':
