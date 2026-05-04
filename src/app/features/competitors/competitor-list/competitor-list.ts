@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, finalize, startWith, switchMap } from 'rxjs';
+import { TimeoutError } from 'rxjs';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -9,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
+import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CompetitorService } from '../../../core/services/competitor';
@@ -28,6 +30,7 @@ import { Competitor } from '../../../core/models/competitor.model';
     TextareaModule,
     ConfirmDialogModule,
     TagModule,
+    MessageModule,
     ToastModule
   ],
   providers: [ConfirmationService, MessageService],
@@ -54,6 +57,7 @@ export class CompetitorListComponent {
   dialogVisible = false;
   saving = false;
   selectedId: string | null = null;
+  runningCompetitors = new Set<string>();
 
   readonly competitorForm = this.formBuilder.group({
     name: ['', [Validators.required]],
@@ -124,25 +128,50 @@ export class CompetitorListComponent {
     });
   }
 
-  runAgents(competitor: Competitor): void {
-    this.agentService.runForCompetitor(competitor.id).subscribe({
+  runAgentsForCompetitor(competitorId: string, competitorName: string): void {
+    this.runningCompetitors.add(competitorId);
+
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Agents Started',
+      detail: `Running all agents for ${competitorName}...`,
+      life: 3000
+    });
+
+    this.agentService.runForCompetitor(competitorId).subscribe({
       next: () => {
+        this.runningCompetitors.delete(competitorId);
         this.messageService.add({
           severity: 'success',
-          summary: 'Agent Run Started',
-          detail: `Agents started for ${competitor.name}.`,
-          life: 3000
+          summary: 'Agents Completed',
+          detail: `All agents finished for ${competitorName}`,
+          life: 4000
         });
       },
-      error: () => {
+      error: (err) => {
+        this.runningCompetitors.delete(competitorId);
+        if (err instanceof TimeoutError) {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Still Running',
+            detail: `Agents for ${competitorName} are still running in the background. Check Agent Logs for status.`,
+            life: 6000
+          });
+          return;
+        }
+
         this.messageService.add({
           severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to start agents.',
+          summary: 'Agent Run Failed',
+          detail: `Something went wrong for ${competitorName}. Check Agent Logs.`,
           life: 5000
         });
       }
     });
+  }
+
+  isRunning(competitorId: string): boolean {
+    return this.runningCompetitors.has(competitorId);
   }
 
   confirmDelete(competitor: Competitor): void {

@@ -2,6 +2,11 @@
 	margin-bottom: 18px;
 }
 
+.running-banner {
+	display: block;
+	margin-bottom: 1rem;
+}
+
 .action-buttons {
 	display: flex;
 	gap: 0.5rem;

@@ -11,6 +11,16 @@
 	/>
 </div>
 
+<div class="running-banner">
+	<p-message
+		*ngIf="runningCompetitors.size > 0"
+		severity="info"
+		icon="pi pi-spin pi-spinner"
+		text="Agents are running for {{ runningCompetitors.size }} competitor(s)... This may take 1-2 minutes."
+		styleClass="w-full"
+	/>
+</div>
+
 <p-table [value]="(competitors$ | async) ?? []" [paginator]="true" [rows]="10" [tableStyle]="{ 'min-width': '100%' }">
 	<ng-template pTemplate="header">
 		<tr>
@@ -32,23 +42,32 @@
 			<td>
 				<p-tag [value]="competitor.isActive ? 'Active' : 'Inactive'" [severity]="competitor.isActive ? 'success' : 'danger'" />
 			</td>
-			<td>{{ competitor.createdAt | date: 'mediumDate' }}</td>
+			<td>{{ competitor.createdAt | date: 'MMM d, yyyy' }}</td>
 			<td>
 				<div class="action-buttons">
-					  <p-button icon="pi pi-play" [outlined]="true" (onClick)="runAgents(competitor)" />
-					  <p-button
-					  	*ngIf="isAdmin"
+					<p-button
+						[icon]="isRunning(competitor.id) ? 'pi pi-spin pi-spinner' : 'pi pi-play'"
+						[loading]="isRunning(competitor.id)"
+						[disabled]="isRunning(competitor.id)"
+						severity="success"
+						[outlined]="true"
+						pTooltip="Run Agents"
+						tooltipPosition="top"
+						(onClick)="runAgentsForCompetitor(competitor.id, competitor.name)"
+					/>
+					<p-button
+						*ngIf="isAdmin"
 						icon="pi pi-pencil"
 						[outlined]="true"
 						(onClick)="openEditDialog(competitor)"
-					  />
-					  <p-button
-					  	*ngIf="isAdmin"
+					/>
+					<p-button
+						*ngIf="isAdmin"
 						icon="pi pi-trash"
 						severity="danger"
 						[outlined]="true"
 						(onClick)="confirmDelete(competitor)"
-					  />
+					/>
 				</div>
 			</td>
 		</tr>

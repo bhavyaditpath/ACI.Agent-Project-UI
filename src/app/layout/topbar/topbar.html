@@ -17,11 +17,12 @@
 			<div class="topbar-actions">
 				<!-- Action Button -->
 				<p-button
-					*ngIf="isAdmin"
-					label="Run All Agents"
-					icon="pi pi-play"
+					[label]="runningAll ? 'Running Agents...' : 'Run All Agents'"
+					[icon]="runningAll ? 'pi pi-spin pi-spinner' : 'pi pi-play'"
 					styleClass="run-agents-action"
 					[loading]="runningAll"
+					[disabled]="runningAll"
+					severity="success"
 					(onClick)="runAllAgents()"
 				/>
 

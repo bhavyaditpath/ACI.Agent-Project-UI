@@ -1,6 +1,6 @@
 import { Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { finalize } from 'rxjs';
+import { TimeoutError } from 'rxjs';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
@@ -41,25 +41,44 @@ export class TopbarComponent {
     }
 
     this.runningAll = true;
-    this.agentService
-      .runAll()
-      .pipe(finalize(() => (this.runningAll = false)))
-      .subscribe({
-        next: () => {
+
+    this.messageService.add({
+      severity: 'info',
+      summary: 'All Agents Started',
+      detail: 'Running agents for all competitors...',
+      life: 3000
+    });
+
+    this.agentService.runAll().subscribe({
+      next: () => {
+        this.runningAll = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'All Agents Completed',
+          detail: 'Agents finished for all competitors.',
+          life: 4000
+        });
+      },
+      error: (err) => {
+        this.runningAll = false;
+        if (err instanceof TimeoutError) {
           this.messageService.add({
-            severity: 'success',
-            summary: 'Agents Started',
-            detail: 'All agents were started successfully.'
+            severity: 'warn',
+            summary: 'Still Running',
+            detail: 'Agents are still running in background. Check Agent Logs page for live status.',
+            life: 6000
           });
-        },
-        error: () => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Run Failed',
-            detail: 'Unable to run agents right now.'
-          });
+          return;
         }
-      });
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Failed',
+          detail: 'Something went wrong. Check Agent Logs for details.',
+          life: 5000
+        });
+      }
+    });
   }
 
   toggleMenu(): void {
