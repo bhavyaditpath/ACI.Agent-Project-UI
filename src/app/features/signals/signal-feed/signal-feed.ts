@@ -36,7 +36,7 @@ export class SignalFeedComponent implements OnInit {
     { label: 'All', value: 'All' },
     { label: 'WebWatcher', value: 'WebWatcher' },
     { label: 'JobBoard', value: 'JobBoard' },
-    // { label: 'RssFeed', value: 'RssFeed' },
+    { label: 'RssFeed', value: 'RssFeed' },
     { label: 'Reddit', value: 'Reddit' },
     { label: 'HackerNews', value: 'HackerNews' }
   ];
@@ -117,8 +117,8 @@ export class SignalFeedComponent implements OnInit {
         return 'info';
       case 'JobBoard':
         return 'success';
-      // case 'RssFeed':
-      //   return 'warn';
+      case 'RssFeed':
+        return 'warn';
       case 'Reddit':
         return 'danger';
       default:
