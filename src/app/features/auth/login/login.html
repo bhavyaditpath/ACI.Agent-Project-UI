@@ -85,7 +85,7 @@
 
         <div class="field">
           <label for="password">Password</label>
-          <div class="input-with-icon">
+          <div class="input-with-icon cursor-pointer">
             <i class="pi pi-lock input-icon"></i>
             <p-password
               id="password"
@@ -101,31 +101,33 @@
           </div>
         </div>
 
-        <div class="form-actions">
+        <!-- <div class="form-actions">
           <div class="remember-me">
             <p-checkbox [binary]="true" label="Remember me" inputId="remember"></p-checkbox>
           </div>
           <a href="#" class="forgot-link">Forgot password?</a>
-        </div>
+        </div> -->
 
         <div class="error-msg" *ngIf="errorMessage">
           <i class="pi pi-exclamation-circle"></i>
           {{ errorMessage }}
         </div>
 
-        <p-button
-          label="Sign In to Control Panel"
-          icon="pi pi-arrow-right"
-          iconPos="right"
-          [loading]="isLoading"
-          (onClick)="onLogin()"
-          styleClass="w-full login-btn"
-        />
+        <div class="login-actions">
+          <p-button
+            label="Sign In to Control Panel"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            [loading]="isLoading"
+            (onClick)="onLogin()"
+            styleClass="login-btn"
+          />
+        </div>
       </div>
 
-      <div class="form-footer">
+      <!-- <div class="form-footer">
         Having trouble? <a href="#">Contact Support</a>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>

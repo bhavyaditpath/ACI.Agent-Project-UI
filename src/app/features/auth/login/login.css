@@ -70,6 +70,7 @@
   letter-spacing: -0.04em;
   margin-bottom: 1.5rem;
   background: linear-gradient(to bottom right, #ffffff, #94a3b8);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -189,6 +190,7 @@
   width: 100%;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .input-icon {
@@ -246,6 +248,16 @@
   background: #fef2f2;
   border: 1px solid #fee2e2;
   border-radius: 10px;
+}
+
+.login-actions {
+  display: flex;
+  justify-content: center;
+}
+
+:host ::ng-deep .login-btn {
+  width: auto !important;
+  min-width: 400px;
 }
 
 :host ::ng-deep .p-button {
