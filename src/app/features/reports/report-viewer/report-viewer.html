@@ -54,11 +54,38 @@
 		text="No reports generated yet. Click Generate Report to create your first intelligence report."
 	/>
 } @else {
+	<div class="filter-row">
+		<p-select
+			[options]="competitorOptions"
+			[(ngModel)]="selectedCompetitor"
+			optionLabel="label"
+			optionValue="value"
+			placeholder="Filter by Competitor"
+		/>
+		<p-button
+			label="Clear"
+			[text]="true"
+			(onClick)="selectedCompetitor = 'all'"
+		/>
+	</div>
+
 	<p-accordion>
-		@for (report of reports; track report.id) {
+		@for (report of filteredReports; track report.id) {
 			<p-accordion-panel [value]="report.id">
 				<p-accordion-header>
-					{{ report.title }} • {{ report.generatedAt | date: 'mediumDate' }}
+					<div class="report-header-row">
+						<p-tag 
+							[value]="report.competitorName"
+							severity="info"
+							styleClass="report-competitor-tag"
+						/>
+						<span class="report-header-title">
+							{{ report.title }}
+						</span>
+						<span class="report-header-date">
+							• {{ report.generatedAt | date: 'MMM d, yyyy' }}
+						</span>
+					</div>
 				</p-accordion-header>
 				<p-accordion-content>
 					<h3>Summary</h3>

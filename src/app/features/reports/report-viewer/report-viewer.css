@@ -2,6 +2,38 @@
 	margin-bottom: 18px;
 }
 
+.filter-row {
+	display: flex;
+	gap: 0.75rem;
+	margin-bottom: 1rem;
+	align-items: center;
+}
+
+.report-header-row {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+}
+
+.report-header-title {
+	font-size: 0.9rem;
+	color: #374151;
+	flex: 1;
+	min-width: 200px;
+}
+
+.report-header-date {
+	font-size: 0.8rem;
+	color: #9CA3AF;
+	white-space: nowrap;
+}
+
+.report-competitor-tag {
+	font-size: 0.75rem;
+	font-weight: 600;
+}
+
 .report-form {
 	display: grid;
 	gap: 0.9rem;
@@ -46,6 +78,15 @@
 	:host ::ng-deep .p-accordion .p-accordion-content {
 		padding-inline: 0.9rem;
 	}
+
+	.filter-row {
+		flex-wrap: wrap;
+	}
+
+	.report-header-title {
+		flex: 1 1 auto;
+		min-width: 150px;
+	}
 }
 
 @media (max-width: 760px) {
@@ -55,5 +96,18 @@
 
 	.report-form {
 		gap: 0.75rem;
+	}
+
+	.report-header-row {
+		gap: 0.5rem;
+	}
+
+	.report-header-title {
+		font-size: 0.85rem;
+		min-width: 100px;
+	}
+
+	.report-header-date {
+		font-size: 0.75rem;
 	}
 }

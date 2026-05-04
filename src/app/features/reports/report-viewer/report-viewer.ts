@@ -7,6 +7,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
+import { TagModule } from 'primeng/tag';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
@@ -27,6 +28,7 @@ import { Competitor } from '../../../core/models/competitor.model';
     ButtonModule,
     DatePickerModule,
     SelectModule,
+    TagModule,
     ProgressSpinnerModule,
     MessageModule,
     ToastModule
@@ -50,6 +52,7 @@ export class ReportViewerComponent implements OnInit {
   reportCount = 0;
   competitors: Competitor[] = [];
   competitorOptions: Array<{ label: string; value: string }> = [];
+  selectedCompetitor = 'all';
 
   dialogVisible = false;
   generatingAll = false;
@@ -58,6 +61,13 @@ export class ReportViewerComponent implements OnInit {
   selectedCompetitorId = '';
   weekStartDate: Date | null = null;
   weekEndDate: Date | null = null;
+
+  get filteredReports(): WeeklyReport[] {
+    if (!this.selectedCompetitor || this.selectedCompetitor === 'all') {
+      return this.reports;
+    }
+    return this.reports.filter((r) => r.competitorId === this.selectedCompetitor);
+  }
 
   ngOnInit(): void {
     this.loadPageData();
@@ -69,7 +79,10 @@ export class ReportViewerComponent implements OnInit {
         this.reports = reports;
         this.reportCount = reports.length;
         this.competitors = competitors;
-        this.competitorOptions = competitors.map((c) => ({ label: c.name, value: c.id }));
+        this.competitorOptions = [
+          { label: 'All Competitors', value: 'all' },
+          ...competitors.map((c) => ({ label: c.name, value: c.id }))
+        ];
         this.cdr.detectChanges();
       }
     );
