@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, finalize, startWith, switchMap } from 'rxjs';
@@ -117,15 +118,34 @@ export class CompetitorListComponent {
           life: 3000
         });
       },
-      error: () => {
+      error: (error) => {
+        const errorMessage = this.getCompetitorErrorMessage(error);
         this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to save competitor.',
+          severity: errorMessage === 'Failed to save competitor.' ? 'error' : 'warn',
+          summary: errorMessage === 'Failed to save competitor.' ? 'Error' : 'Validation',
+          detail: errorMessage,
           life: 5000
         });
       }
     });
+  }
+
+  private getCompetitorErrorMessage(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      const responseMessage = this.extractResponseMessage(error.error);
+      return responseMessage || error.message || 'Failed to save competitor.';
+    }
+
+    return 'Failed to save competitor.';
+  }
+
+  private extractResponseMessage(payload: unknown): string {
+    if (!payload || typeof payload !== 'object') {
+      return '';
+    }
+
+    const typedPayload = payload as { message?: unknown };
+    return typeof typedPayload.message === 'string' ? typedPayload.message : '';
   }
 
   runAgentsForCompetitor(competitorId: string, competitorName: string): void {
