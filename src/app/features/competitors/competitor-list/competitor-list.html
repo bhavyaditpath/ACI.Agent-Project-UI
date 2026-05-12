@@ -81,11 +81,20 @@
 	[style]="{ width: '520px' }"
 >
 	<form [formGroup]="competitorForm" class="competitor-form">
-		<label for="name">Name *</label>
+		<label for="name">Name <span class="required-marker">*</span></label>
 		<input id="name" pInputText formControlName="name" />
+		@if (nameControl.touched && nameControl.invalid) {
+			<small class="field-error">Name is required.</small>
+		}
 
-		<label for="websiteUrl">Website URL *</label>
+		<label for="websiteUrl">Website URL <span class="required-marker">*</span></label>
 		<input id="websiteUrl" pInputText formControlName="websiteUrl" />
+		@if (websiteUrlControl.touched && websiteUrlControl.hasError('required')) {
+			<small class="field-error">Website URL is required.</small>
+		}
+		@if (websiteUrlControl.touched && websiteUrlControl.hasError('pattern')) {
+			<small class="field-error">Enter a valid website URL.</small>
+		}
 
 		<label for="description">Description</label>
 		<textarea id="description" pTextarea rows="4" formControlName="description"></textarea>

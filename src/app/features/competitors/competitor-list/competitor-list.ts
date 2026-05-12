@@ -19,6 +19,8 @@ import { AgentService } from '../../../core/services/agent';
 import { Auth } from '../../../core/services/auth';
 import { Competitor } from '../../../core/models/competitor.model';
 
+const WEBSITE_URL_PATTERN = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\:[0-9]+)?(\/[^\s]*)?$/i;
+
 @Component({
   selector: 'app-competitor-list',
   imports: [
@@ -62,9 +64,17 @@ export class CompetitorListComponent {
 
   readonly competitorForm = this.formBuilder.group({
     name: ['', [Validators.required]],
-    websiteUrl: ['', [Validators.required]],
+    websiteUrl: ['', [Validators.required, Validators.pattern(WEBSITE_URL_PATTERN)]],
     description: ['']
   });
+
+  get nameControl() {
+    return this.competitorForm.controls.name;
+  }
+
+  get websiteUrlControl() {
+    return this.competitorForm.controls.websiteUrl;
+  }
 
   get isEditMode(): boolean {
     return this.selectedId !== null;
