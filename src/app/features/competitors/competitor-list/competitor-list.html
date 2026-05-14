@@ -1,5 +1,4 @@
 <p-toast />
-<p-confirmdialog />
 
 <div class="page-header">
 	<h1 class="page-title">Competitors</h1>
@@ -73,6 +72,38 @@
 		</tr>
 	</ng-template>
 </p-table>
+
+<p-dialog
+	[(visible)]="deleteDialogVisible"
+	[modal]="true"
+	[closable]="false"
+	[draggable]="false"
+	[resizable]="false"
+	[style]="{ width: '520px' }"
+	styleClass="delete-confirm-dialog"
+	(onHide)="cancelDelete()"
+>
+	<ng-template pTemplate="header">
+		<div class="delete-dialog-header">
+			<span class="delete-dialog-title">Confirm Delete</span>
+		</div>
+	</ng-template>
+
+	<div class="delete-dialog-body">
+		<div class="delete-dialog-icon" aria-hidden="true">
+			<i class="pi pi-exclamation-triangle"></i>
+		</div>
+		<div class="delete-dialog-copy">
+			<p class="delete-dialog-question">Delete {{ competitorToDelete?.name }}?</p>
+			<p class="delete-dialog-note">This action cannot be undone.</p>
+		</div>
+	</div>
+
+	<ng-template pTemplate="footer">
+		<p-button label="Cancel" severity="secondary" (onClick)="cancelDelete()" />
+		<p-button label="Delete" icon="pi pi-trash" severity="danger" (onClick)="deleteCompetitor()" />
+	</ng-template>
+</p-dialog>
 
 <p-dialog
 	[header]="isEditMode ? 'Edit Competitor' : 'Add Competitor'"

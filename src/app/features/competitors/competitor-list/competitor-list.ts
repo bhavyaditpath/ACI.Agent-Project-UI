@@ -9,11 +9,10 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { CompetitorService } from '../../../core/services/competitor';
 import { AgentService } from '../../../core/services/agent';
 import { Auth } from '../../../core/services/auth';
@@ -31,12 +30,11 @@ const WEBSITE_URL_PATTERN = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\:[0-9]+)?(\/[^\s]
     DialogModule,
     InputTextModule,
     TextareaModule,
-    ConfirmDialogModule,
     TagModule,
     MessageModule,
     ToastModule
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [MessageService],
   templateUrl: './competitor-list.html',
   styleUrl: './competitor-list.css',
 })
@@ -44,7 +42,6 @@ export class CompetitorListComponent {
   private readonly competitorService = inject(CompetitorService);
   private readonly agentService = inject(AgentService);
   private readonly authService = inject(Auth);
-  private readonly confirmationService = inject(ConfirmationService);
   private readonly messageService = inject(MessageService);
   private readonly formBuilder = inject(FormBuilder);
 
@@ -61,6 +58,8 @@ export class CompetitorListComponent {
   saving = false;
   selectedId: string | null = null;
   runningCompetitors = new Set<string>();
+  deleteDialogVisible = false;
+  competitorToDelete: Competitor | null = null;
 
   readonly competitorForm = this.formBuilder.group({
     name: ['', [Validators.required]],
@@ -205,29 +204,39 @@ export class CompetitorListComponent {
   }
 
   confirmDelete(competitor: Competitor): void {
-    this.confirmationService.confirm({
-      message: `Delete ${competitor.name}?`,
-      header: 'Confirm Delete',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.competitorService.delete(competitor.id).subscribe({
-          next: () => {
-            this.loadCompetitors();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Deleted',
-              detail: 'Competitor deleted successfully.',
-              life: 3000
-            });
-          },
-          error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Failed to delete competitor.',
-              life: 5000
-            });
-          }
+    this.competitorToDelete = competitor;
+    this.deleteDialogVisible = true;
+  }
+
+  cancelDelete(): void {
+    this.deleteDialogVisible = false;
+    this.competitorToDelete = null;
+  }
+
+  deleteCompetitor(): void {
+    if (!this.competitorToDelete) {
+      return;
+    }
+
+    const competitor = this.competitorToDelete;
+    this.competitorService.delete(competitor.id).subscribe({
+      next: () => {
+        this.deleteDialogVisible = false;
+        this.competitorToDelete = null;
+        this.loadCompetitors();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deleted',
+          detail: 'Competitor deleted successfully.',
+          life: 3000
+        });
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to delete competitor.',
+          life: 5000
         });
       }
     });
