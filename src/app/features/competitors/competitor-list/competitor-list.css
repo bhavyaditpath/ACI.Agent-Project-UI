@@ -7,37 +7,6 @@
 	margin-bottom: 1rem;
 }
 
-.filter-row {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 1rem;
-	padding: 1rem;
-	margin-bottom: 1rem;
-	border-radius: var(--radius-lg);
-	border: 1px solid var(--border-subtle);
-	background: var(--surface);
-	box-shadow: var(--shadow-md);
-}
-
-.date-range-selector {
-	display: grid;
-	gap: 0.5rem;
-	min-width: 240px;
-}
-
-.date-range-selector label {
-	font-weight: 700;
-	color: var(--text-primary);
-}
-
-.custom-range {
-	display: flex;
-	align-items: center;
-	gap: 0.75rem;
-	flex-wrap: wrap;
-}
-
 .action-buttons {
 	display: flex;
 	gap: 0.5rem;
@@ -187,4 +156,55 @@
 	:host ::ng-deep .delete-confirm-dialog .p-dialog-footer .p-button {
 		flex: 1 1 140px;
 	}
+}
+
+/* Run Agents Dialog Styles */
+.dialog-competitor-name {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 1rem;
+	font-weight: 600;
+	color: #1E3A5F;
+	margin-bottom: 1rem;
+}
+
+.dialog-divider {
+	height: 1px;
+	background: #E5E7EB;
+	margin-bottom: 1rem;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.field label {
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: #374151;
+}
+
+.field-group {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.helper-text {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	color: #6B7280;
+	font-size: 0.8rem;
+	margin-top: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.w-full {
+	width: 100%;
 }

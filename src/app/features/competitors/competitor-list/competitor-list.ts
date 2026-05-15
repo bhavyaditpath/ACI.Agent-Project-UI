@@ -74,6 +74,10 @@ export class CompetitorListComponent {
   selectedDateRange: AgentDateRangeType = 'Last7Days';
   customFromDate: Date | null = null;
   customToDate: Date | null = null;
+  showRunAgentsDialog = false;
+  selectedCompetitorId = '';
+  selectedCompetitorName = '';
+  today = new Date();
 
   readonly competitorForm = this.formBuilder.group({
     name: ['', [Validators.required]],
@@ -171,8 +175,37 @@ export class CompetitorListComponent {
     return typeof typedPayload.message === 'string' ? typedPayload.message : '';
   }
 
-  runAgentsForCompetitor(competitorId: string, competitorName: string): void {
+  openRunAgentsDialog(competitorId: string, competitorName: string): void {
+    this.selectedCompetitorId = competitorId;
+    this.selectedCompetitorName = competitorName;
+    this.selectedDateRange = 'Last7Days';
+    this.customFromDate = null;
+    this.customToDate = null;
+    this.showRunAgentsDialog = true;
+  }
+
+  confirmRunAgents(): void {
+    this.showRunAgentsDialog = false;
+
     const request: AgentRunRequest = {
+      dateRangeType: this.selectedDateRange,
+      fromDate: this.selectedDateRange === 'Custom' ? this.customFromDate?.toISOString() : undefined,
+      toDate: this.selectedDateRange === 'Custom' ? this.customToDate?.toISOString() : undefined
+    };
+
+    this.runAgentsForCompetitor(
+      this.selectedCompetitorId,
+      this.selectedCompetitorName,
+      request
+    );
+  }
+
+  runAgentsForCompetitor(
+    competitorId: string,
+    competitorName: string,
+    request?: AgentRunRequest
+  ): void {
+    const agentRequest: AgentRunRequest = request || {
       dateRangeType: this.selectedDateRange,
       fromDate: this.selectedDateRange === 'Custom' ? this.customFromDate?.toISOString() : undefined,
       toDate: this.selectedDateRange === 'Custom' ? this.customToDate?.toISOString() : undefined
@@ -187,7 +220,7 @@ export class CompetitorListComponent {
       life: 3000
     });
 
-    this.agentService.runForCompetitor(competitorId, request).subscribe({
+    this.agentService.runForCompetitor(competitorId, agentRequest).subscribe({
       next: () => {
         this.runningCompetitors.delete(competitorId);
         this.messageService.add({

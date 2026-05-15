@@ -16,42 +16,88 @@
 		severity="info"
 		icon="pi pi-spin pi-spinner"
 		text="Agents are running for {{ runningCompetitors.size }} competitor(s)... This may take 1-2 minutes."
-		styleClass="w-full"
-	/>
+		styleClass="w-full" >
+	</p-message>
 </div>
 
-<div class="filter-row">
-	<div class="date-range-selector">
-		<label for="date-range-select">Data Collection Range:</label>
+<p-dialog
+	header="Run Agents"
+	[(visible)]="showRunAgentsDialog"
+	[modal]="true"
+	[style]="{ width: '420px' }"
+	[closable]="true"
+>
+	<!-- Competitor name -->
+	<div class="dialog-competitor-name">
+		<i class="pi pi-building"></i>
+		<span>{{ selectedCompetitorName }}</span>
+	</div>
+
+	<div class="dialog-divider"></div>
+
+	<!-- Date range label -->
+	<div class="field">
+		<label>Data Collection Range</label>
 		<p-select
-			inputId="date-range-select"
 			[options]="dateRangeOptions"
 			[(ngModel)]="selectedDateRange"
 			optionLabel="label"
 			optionValue="value"
+			styleClass="w-full"
 			appendTo="body"
 		/>
 	</div>
 
-	@if (selectedDateRange === 'Custom') {
-		<div class="custom-range">
+	<!-- Custom date range — only show when Custom selected -->
+	<div class="field-group" *ngIf="selectedDateRange === 'Custom'">
+		<div class="field">
+			<label>From Date</label>
 			<p-datepicker
 				[(ngModel)]="customFromDate"
 				placeholder="From Date"
 				dateFormat="yy-mm-dd"
 				[showIcon]="true"
+				styleClass="w-full"
 				appendTo="body"
+				[maxDate]="today"
 			/>
+		</div>
+		<div class="field">
+			<label>To Date</label>
 			<p-datepicker
 				[(ngModel)]="customToDate"
 				placeholder="To Date"
 				dateFormat="yy-mm-dd"
 				[showIcon]="true"
+				styleClass="w-full"
 				appendTo="body"
+				[maxDate]="today"
 			/>
 		</div>
-	}
-</div>
+	</div>
+
+	<!-- Helper text -->
+	<small class="helper-text">
+		<i class="pi pi-info-circle"></i>
+		Agents will collect signals from the selected date range only.
+	</small>
+
+	<!-- Footer buttons -->
+	<ng-template pTemplate="footer">
+		<p-button
+			label="Cancel"
+			severity="secondary"
+			[outlined]="true"
+			(onClick)="showRunAgentsDialog = false"
+		/>
+		<p-button
+			label="Run Agents"
+			icon="pi pi-play"
+			(onClick)="confirmRunAgents()"
+		/>
+	</ng-template>
+
+</p-dialog>
 
 <p-table [value]="(competitors$ | async) ?? []" [paginator]="true" [rows]="10" [tableStyle]="{ 'min-width': '100%' }">
 	<ng-template pTemplate="header">
@@ -85,7 +131,7 @@
 						[outlined]="true"
 						pTooltip="Run Agents"
 						tooltipPosition="top"
-						(onClick)="runAgentsForCompetitor(competitor.id, competitor.name)"
+					(onClick)="openRunAgentsDialog(competitor.id, competitor.name)"
 					/>
 					<p-button
 						*ngIf="isAdmin"

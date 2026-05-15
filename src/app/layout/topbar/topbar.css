@@ -236,3 +236,54 @@
 		display: none;
 	}
 }
+
+/* --- Run All Agents Dialog Styles --- */
+.dialog-description {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.95rem;
+	font-weight: 600;
+	color: #1E3A5F;
+	margin-bottom: 1rem;
+}
+
+.dialog-divider {
+	height: 1px;
+	background: #E5E7EB;
+	margin-bottom: 1rem;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.field label {
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: #374151;
+}
+
+.field-group {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.helper-text {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	color: #6B7280;
+	font-size: 0.8rem;
+	margin-top: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.w-full {
+	width: 100%;
+}

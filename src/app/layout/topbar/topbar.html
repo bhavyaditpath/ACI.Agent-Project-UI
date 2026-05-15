@@ -23,7 +23,7 @@
 					[loading]="runningAll"
 					[disabled]="runningAll"
 					severity="success"
-					(onClick)="runAllAgents()"
+					(onClick)="openRunAllDialog()"
 				/>
 
 				<div class="v-divider"></div>
@@ -58,4 +58,83 @@
 		</ng-template>
 	</p-toolbar>
 </div>
+
+<p-dialog
+	header="Run All Agents"
+	[(visible)]="showRunAllDialog"
+	[modal]="true"
+	[style]="{ width: '420px' }"
+	[closable]="true"
+>
+	<!-- Description -->
+	<div class="dialog-description">
+		<i class="pi pi-info-circle"></i>
+		<span>Run agents for all competitors</span>
+	</div>
+
+	<div class="dialog-divider"></div>
+
+	<!-- Date range label -->
+	<div class="field">
+		<label>Data Collection Range</label>
+		<p-select
+			[options]="dateRangeOptions"
+			[(ngModel)]="selectedDateRange"
+			optionLabel="label"
+			optionValue="value"
+			styleClass="w-full"
+			appendTo="body"
+		/>
+	</div>
+
+	<!-- Custom date range — only show when Custom selected -->
+	<div class="field-group" *ngIf="selectedDateRange === 'Custom'">
+		<div class="field">
+			<label>From Date</label>
+			<p-datepicker
+				[(ngModel)]="customFromDate"
+				placeholder="From Date"
+				dateFormat="yy-mm-dd"
+				[showIcon]="true"
+				styleClass="w-full"
+				appendTo="body"
+				[maxDate]="today"
+			/>
+		</div>
+		<div class="field">
+			<label>To Date</label>
+			<p-datepicker
+				[(ngModel)]="customToDate"
+				placeholder="To Date"
+				dateFormat="yy-mm-dd"
+				[showIcon]="true"
+				styleClass="w-full"
+				appendTo="body"
+				[maxDate]="today"
+			/>
+		</div>
+	</div>
+
+	<!-- Helper text -->
+	<small class="helper-text">
+		<i class="pi pi-info-circle"></i>
+		Agents will collect signals from the selected date range only.
+	</small>
+
+	<!-- Footer buttons -->
+	<ng-template pTemplate="footer">
+		<p-button
+			label="Cancel"
+			severity="secondary"
+			[outlined]="true"
+			(onClick)="showRunAllDialog = false"
+		/>
+		<p-button
+			label="Run Agents"
+			icon="pi pi-play"
+			(onClick)="confirmRunAll()"
+		/>
+	</ng-template>
+
+</p-dialog>
 
