@@ -35,6 +35,16 @@
 		(onChange)="onAgentChange()"
 	></p-select>
 
+	<p-select
+		[options]="sentimentOptions"
+		[(ngModel)]="selectedSentiment"
+		optionLabel="label"
+		optionValue="value"
+		placeholder="Sentiment"
+		appendTo="body"
+		(onChange)="onSentimentChange()"
+	></p-select>
+
 	<p-button label="Clear Filters" icon="pi pi-filter-slash" [outlined]="true" (onClick)="clearFilters()" />
 </div>
 
@@ -45,7 +55,14 @@
 		@for (signal of filteredSignals; track signal.id) {
 			<div class="signal-card">
 				<div class="signal-header">
-					<p-tag [value]="signal.agentType" [severity]="getAgentSeverity(signal.agentType)" />
+					<div class="signal-badges">
+						<p-tag [value]="signal.agentType" [severity]="getAgentSeverity(signal.agentType)" />
+						<p-tag
+							[value]="signal.sentiment ?? 'Neutral'"
+							[severity]="getSentimentSeverity(signal.sentiment)"
+							styleClass="sentiment-badge"
+						/>
+					</div>
 					<span class="signal-time">{{ getTimeAgo(signal.occurredAt) }}</span>
 				</div>
 

@@ -20,6 +20,39 @@
 	/>
 </div>
 
+<div class="filter-row">
+	<div class="date-range-selector">
+		<label for="date-range-select">Data Collection Range:</label>
+		<p-select
+			inputId="date-range-select"
+			[options]="dateRangeOptions"
+			[(ngModel)]="selectedDateRange"
+			optionLabel="label"
+			optionValue="value"
+			appendTo="body"
+		/>
+	</div>
+
+	@if (selectedDateRange === 'Custom') {
+		<div class="custom-range">
+			<p-datepicker
+				[(ngModel)]="customFromDate"
+				placeholder="From Date"
+				dateFormat="yy-mm-dd"
+				[showIcon]="true"
+				appendTo="body"
+			/>
+			<p-datepicker
+				[(ngModel)]="customToDate"
+				placeholder="To Date"
+				dateFormat="yy-mm-dd"
+				[showIcon]="true"
+				appendTo="body"
+			/>
+		</div>
+	}
+</div>
+
 <p-table [value]="(competitors$ | async) ?? []" [paginator]="true" [rows]="10" [tableStyle]="{ 'min-width': '100%' }">
 	<ng-template pTemplate="header">
 		<tr>

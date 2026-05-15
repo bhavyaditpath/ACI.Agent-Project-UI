@@ -7,6 +7,37 @@
 	margin-bottom: 1rem;
 }
 
+.filter-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1rem;
+	margin-bottom: 1rem;
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--border-subtle);
+	background: var(--surface);
+	box-shadow: var(--shadow-md);
+}
+
+.date-range-selector {
+	display: grid;
+	gap: 0.5rem;
+	min-width: 240px;
+}
+
+.date-range-selector label {
+	font-weight: 700;
+	color: var(--text-primary);
+}
+
+.custom-range {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+}
+
 .action-buttons {
 	display: flex;
 	gap: 0.5rem;
@@ -125,6 +156,16 @@
 }
 
 @media (max-width: 760px) {
+	.filter-row {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.custom-range {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
 	.action-buttons {
 		justify-content: flex-start;
 	}

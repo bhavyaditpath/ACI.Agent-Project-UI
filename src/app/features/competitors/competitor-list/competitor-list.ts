@@ -1,18 +1,21 @@
 import { Component, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, finalize, startWith, switchMap } from 'rxjs';
 import { TimeoutError } from 'rxjs';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { TagModule } from 'primeng/tag';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { AgentDateRangeType, AgentRunRequest } from '../../../core/models/agent.model';
 import { CompetitorService } from '../../../core/services/competitor';
 import { AgentService } from '../../../core/services/agent';
 import { Auth } from '../../../core/services/auth';
@@ -24,11 +27,14 @@ const WEBSITE_URL_PATTERN = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\:[0-9]+)?(\/[^\s]
   selector: 'app-competitor-list',
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     TableModule,
     ButtonModule,
     DialogModule,
+    DatePickerModule,
     InputTextModule,
+    SelectModule,
     TextareaModule,
     TagModule,
     MessageModule,
@@ -60,6 +66,14 @@ export class CompetitorListComponent {
   runningCompetitors = new Set<string>();
   deleteDialogVisible = false;
   competitorToDelete: Competitor | null = null;
+  readonly dateRangeOptions: Array<{ label: string; value: AgentDateRangeType }> = [
+    { label: 'Last 7 Days', value: 'Last7Days' },
+    { label: 'Last 30 Days', value: 'Last30Days' },
+    { label: 'Custom Range', value: 'Custom' }
+  ];
+  selectedDateRange: AgentDateRangeType = 'Last7Days';
+  customFromDate: Date | null = null;
+  customToDate: Date | null = null;
 
   readonly competitorForm = this.formBuilder.group({
     name: ['', [Validators.required]],
@@ -158,6 +172,12 @@ export class CompetitorListComponent {
   }
 
   runAgentsForCompetitor(competitorId: string, competitorName: string): void {
+    const request: AgentRunRequest = {
+      dateRangeType: this.selectedDateRange,
+      fromDate: this.selectedDateRange === 'Custom' ? this.customFromDate?.toISOString() : undefined,
+      toDate: this.selectedDateRange === 'Custom' ? this.customToDate?.toISOString() : undefined
+    };
+
     this.runningCompetitors.add(competitorId);
 
     this.messageService.add({
@@ -167,7 +187,7 @@ export class CompetitorListComponent {
       life: 3000
     });
 
-    this.agentService.runForCompetitor(competitorId).subscribe({
+    this.agentService.runForCompetitor(competitorId, request).subscribe({
       next: () => {
         this.runningCompetitors.delete(competitorId);
         this.messageService.add({

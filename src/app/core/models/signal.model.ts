@@ -3,6 +3,7 @@ export interface Signal {
   competitorId: string;
   competitorName: string;
   agentType: string;
+  sentiment?: string | null;
   signalType: string;
   title: string;
   description?: string;

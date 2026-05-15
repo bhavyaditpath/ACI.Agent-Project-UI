@@ -41,6 +41,13 @@ export class SignalFeedComponent implements OnInit {
     { label: 'HackerNews', value: 'HackerNews' }
   ];
 
+  readonly sentimentOptions = [
+    { label: 'All Sentiments', value: 'all' },
+    { label: 'Positive', value: 'Positive' },
+    { label: 'Negative', value: 'Negative' },
+    { label: 'Neutral', value: 'Neutral' }
+  ];
+
   competitors: Competitor[] = [];
   competitorOptions: Array<{ label: string; value: string }> = [{ label: 'All Competitors', value: 'all' }];
 
@@ -51,6 +58,7 @@ export class SignalFeedComponent implements OnInit {
   selectedCompetitor = 'all';
   selectedDays = 7;
   selectedAgent = 'All';
+  selectedSentiment = 'all';
 
   ngOnInit(): void {
     this.loadCompetitors();
@@ -93,10 +101,15 @@ export class SignalFeedComponent implements OnInit {
     this.applyClientFilters();
   }
 
+  onSentimentChange(): void {
+    this.applyClientFilters();
+  }
+
   clearFilters(): void {
     this.selectedCompetitor = 'all';
     this.selectedDays = 7;
     this.selectedAgent = 'All';
+    this.selectedSentiment = 'all';
     this.loadSignals();
   }
 
@@ -106,9 +119,22 @@ export class SignalFeedComponent implements OnInit {
     this.filteredSignals = this.signals.filter((signal) => {
       const agentMatch = this.selectedAgent === 'All' || signal.agentType === this.selectedAgent;
       const daysMatch = now - new Date(signal.occurredAt).getTime() <= daysMs;
-      return agentMatch && daysMatch;
+      const sentiment = signal.sentiment ?? 'Neutral';
+      const sentimentMatch = this.selectedSentiment === 'all' || sentiment === this.selectedSentiment;
+      return agentMatch && daysMatch && sentimentMatch;
     });
     this.filteredSignalsCount = this.filteredSignals.length;
+  }
+
+  getSentimentSeverity(sentiment: string | null | undefined): 'success' | 'danger' | 'secondary' {
+    switch (sentiment) {
+      case 'Positive':
+        return 'success';
+      case 'Negative':
+        return 'danger';
+      default:
+        return 'secondary';
+    }
   }
 
   getAgentSeverity(agentType: string): 'info' | 'success' | 'warn' | 'danger' | 'secondary' {
