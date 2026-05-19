@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,6 +8,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DatePickerModule } from 'primeng/datepicker';
+import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
@@ -15,7 +16,7 @@ import { TagModule } from 'primeng/tag';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { AgentDateRangeType, AgentRunRequest } from '../../../core/models/agent.model';
+import { AgentDateRangeType, AgentRunRequest, AgentConfiguration, UpdateAgentConfigurationRequest } from '../../../core/models/agent.model';
 import { CompetitorService } from '../../../core/services/competitor';
 import { AgentService } from '../../../core/services/agent';
 import { Auth } from '../../../core/services/auth';
@@ -38,7 +39,8 @@ const WEBSITE_URL_PATTERN = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\:[0-9]+)?(\/[^\s]
     TextareaModule,
     TagModule,
     MessageModule,
-    ToastModule
+    ToastModule,
+    TooltipModule
   ],
   providers: [MessageService],
   templateUrl: './competitor-list.html',
@@ -50,6 +52,7 @@ export class CompetitorListComponent {
   private readonly authService = inject(Auth);
   private readonly messageService = inject(MessageService);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   get isAdmin(): boolean {
     return this.authService.isAdmin();
@@ -79,6 +82,13 @@ export class CompetitorListComponent {
   selectedCompetitorName = '';
   today = new Date();
 
+  // Agent configuration dialog state
+  showAgentConfigDialog = false;
+  agentConfigCompetitorId = '';
+  agentConfigCompetitorName = '';
+  agentConfigurations: AgentConfiguration[] = [];
+  isLoadingConfigs = false;
+
   readonly competitorForm = this.formBuilder.group({
     name: ['', [Validators.required]],
     websiteUrl: ['', [Validators.required, Validators.pattern(WEBSITE_URL_PATTERN)]],
@@ -87,6 +97,80 @@ export class CompetitorListComponent {
 
   get nameControl() {
     return this.competitorForm.controls.name;
+  }
+
+  // Agent icons map
+  agentIcons: Record<string, string> = {
+    'WebWatcher': 'pi pi-globe',
+    'JobBoard':   'pi pi-briefcase',
+    'RssFeed':    'pi pi-rss',
+    'Reddit':     'pi pi-comments',
+    'HackerNews': 'pi pi-code'
+  };
+
+  // Open agent config dialog
+  openAgentConfigDialog(
+    competitorId: string,
+    competitorName: string): void {
+
+    this.agentConfigCompetitorId = competitorId;
+    this.agentConfigCompetitorName = competitorName;
+    this.showAgentConfigDialog = true;
+    this.isLoadingConfigs = true;
+
+    this.agentService
+      .getAgentConfigurations(competitorId)
+      .subscribe({
+        next: (configs) => {
+          this.agentConfigurations = configs;
+          this.isLoadingConfigs = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.isLoadingConfigs = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to load agent configurations',
+            life: 2000
+          });
+        }
+      });
+  }
+
+  // Toggle agent enable/disable
+  toggleAgent(config: AgentConfiguration): void {
+    const newValue = !config.isEnabled;
+    // Optimistically update UI
+    config.isEnabled = newValue;
+
+    const request: UpdateAgentConfigurationRequest = {
+      agentType: config.agentType,
+      isEnabled: newValue
+    };
+
+    this.agentService
+      .updateAgentConfiguration(this.agentConfigCompetitorId, request)
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Updated',
+            detail: `${config.agentType} ${newValue ? 'enabled' : 'disabled'} successfully`,
+            life: 2000
+          });
+        },
+        error: () => {
+          // Revert toggle on error
+          config.isEnabled = !newValue;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to update configuration',
+            life: 2000
+          });
+        }
+      });
   }
 
   get websiteUrlControl() {

@@ -135,6 +135,15 @@
 					/>
 					<p-button
 						*ngIf="isAdmin"
+						icon="pi pi-sliders-h"
+						[outlined]="true"
+						severity="info"
+						pTooltip="Configure Agents"
+						tooltipPosition="top"
+						(onClick)="openAgentConfigDialog(competitor.id, competitor.name)"
+					/>
+					<p-button
+						*ngIf="isAdmin"
 						icon="pi pi-pencil"
 						[outlined]="true"
 						(onClick)="openEditDialog(competitor)"
@@ -182,6 +191,84 @@
 		<p-button label="Cancel" severity="secondary" (onClick)="cancelDelete()" />
 		<p-button label="Delete" icon="pi pi-trash" severity="danger" (onClick)="deleteCompetitor()" />
 	</ng-template>
+</p-dialog>
+
+<p-dialog
+	header="Agent Configuration"
+	[(visible)]="showAgentConfigDialog"
+	[modal]="true"
+	[style]="{ width: '500px' }"
+	[closable]="true">
+
+	<!-- Competitor name header -->
+	<div class="config-header">
+		<i class="pi pi-building"></i>
+		<span>{{ agentConfigCompetitorName }}</span>
+	</div>
+
+	<p class="config-subtitle">
+		Enable or disable specific agents for
+		this competitor. Disabled agents will
+		be skipped during scheduled and manual runs.
+	</p>
+
+	<!-- Loading state -->
+	<div class="loading-configs"
+		*ngIf="isLoadingConfigs">
+		<i class="pi pi-spin pi-spinner"></i>
+		Loading agent configurations...
+	</div>
+
+	<!-- Agent list -->
+	<div class="agent-config-list"
+		*ngIf="!isLoadingConfigs">
+
+		<div class="agent-config-item"
+			*ngFor="let config of agentConfigurations">
+
+			<!-- Left side: icon + name + description -->
+			<div class="agent-info">
+				<div class="agent-icon-wrapper">
+					<i [class]="agentIcons[config.agentType]
+						|| 'pi pi-cog'"></i>
+				</div>
+				<div class="agent-details">
+					<span class="agent-name">
+						{{ config.agentType }}
+					</span>
+					<span class="agent-desc">
+						{{ config.agentDescription }}
+					</span>
+				</div>
+			</div>
+
+			<!-- Right side: toggle switch -->
+			<div class="agent-toggle">
+				<p-button
+					(onClick)="toggleAgent(config)"
+					[icon]="config.isEnabled ? 'pi pi-check' : 'pi pi-times'"
+					[severity]="config.isEnabled ? 'success' : 'secondary'"
+					[outlined]="!config.isEnabled"
+				/>
+				<span class="toggle-label"
+					[class.enabled]="config.isEnabled"
+					[class.disabled]="!config.isEnabled">
+					{{ config.isEnabled ? 'Enabled' : 'Disabled' }}
+				</span>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<ng-template pTemplate="footer">
+		<p-button
+			label="Close"
+			severity="secondary"
+			(onClick)="showAgentConfigDialog = false"
+		/>
+	</ng-template>
+
 </p-dialog>
 
 <p-dialog

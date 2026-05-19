@@ -208,3 +208,105 @@
 .w-full {
 	width: 100%;
 }
+
+.config-header {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 1rem;
+	font-weight: 600;
+	color: #1E3A5F;
+	margin-bottom: 0.5rem;
+}
+
+.config-subtitle {
+	font-size: 0.85rem;
+	color: #6B7280;
+	margin-bottom: 1.25rem;
+}
+
+.loading-configs {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: #6B7280;
+	padding: 1rem 0;
+	justify-content: center;
+}
+
+.agent-config-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+}
+
+.agent-config-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1rem 0;
+	border-bottom: 1px solid #F3F4F6;
+}
+
+.agent-config-item:last-child {
+	border-bottom: none;
+}
+
+.agent-info {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	flex: 1;
+}
+
+.agent-icon-wrapper {
+	width: 36px;
+	height: 36px;
+	border-radius: 8px;
+	background: #EFF6FF;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #2563EB;
+	font-size: 1rem;
+	flex-shrink: 0;
+}
+
+.agent-details {
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem;
+}
+
+.agent-name {
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: #1F2937;
+}
+
+.agent-desc {
+	font-size: 0.78rem;
+	color: #6B7280;
+	max-width: 280px;
+}
+
+.agent-toggle {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-shrink: 0;
+}
+
+.toggle-label {
+	font-size: 0.8rem;
+	font-weight: 500;
+	min-width: 52px;
+}
+
+.toggle-label.enabled {
+	color: #166534;
+}
+
+.toggle-label.disabled {
+	color: #DC2626;
+}

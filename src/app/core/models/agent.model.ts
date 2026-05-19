@@ -5,3 +5,17 @@ export interface AgentRunRequest {
   fromDate?: string;
   toDate?: string;
 }
+
+export interface AgentConfiguration {
+  id: string;
+  competitorId: string;
+  agentType: string;
+  isEnabled: boolean;
+  agentDescription: string;
+  updatedAt: string;
+}
+
+export interface UpdateAgentConfigurationRequest {
+  agentType: string;
+  isEnabled: boolean;
+}

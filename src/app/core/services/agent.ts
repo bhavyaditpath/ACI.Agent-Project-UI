@@ -3,7 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AgentRunLog } from '../models/agent-run-log.model';
-import { AgentRunRequest } from '../models/agent.model';
+import {
+  AgentRunRequest,
+  AgentConfiguration,
+  UpdateAgentConfigurationRequest
+} from '../models/agent.model';
 
 @Injectable({
   providedIn: 'root',
@@ -24,5 +28,21 @@ export class AgentService {
 
   getLogs(): Observable<AgentRunLog[]> {
     return this.http.get<AgentRunLog[]>(`${this.basePath}/logs`);
+  }
+
+  getAgentConfigurations(competitorId: string): Observable<AgentConfiguration[]> {
+    return this.http.get<AgentConfiguration[]>(
+      `${environment.apiUrl}/competitors/${competitorId}/agents`
+    );
+  }
+
+  updateAgentConfiguration(
+    competitorId: string,
+    request: UpdateAgentConfigurationRequest
+  ): Observable<any> {
+    return this.http.put(
+      `${environment.apiUrl}/competitors/${competitorId}/agents`,
+      request
+    );
   }
 }
