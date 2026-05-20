@@ -4,7 +4,7 @@ export interface GlobalAgentDefaultResponse {
   isEnabledByDefault: boolean;
   agentDescription: string;
   agentIcon: string;
-  updatedBy: string;
+  updatedByUserName: string;
   updatedAt: string;
 }
 
