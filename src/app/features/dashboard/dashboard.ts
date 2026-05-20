@@ -1,85 +1,55 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ToastModule } from 'primeng/toast';
+import { ChartModule } from 'primeng/chart';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { MessageService } from 'primeng/api';
-import { CompetitorService } from '../../core/services/competitor';
-import { SignalService } from '../../core/services/signal';
-import { AgentService } from '../../core/services/agent';
-import { ReportService } from '../../core/services/report';
-import { Competitor } from '../../core/models/competitor.model';
-import { Signal } from '../../core/models/signal.model';
-import { AgentRunLog } from '../../core/models/agent-run-log.model';
-import { WeeklyReport } from '../../core/models/weekly-report.model';
+import { AnalyticsService, DashboardAnalyticsResponse } from '../../core/services/analytics';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterModule, CardModule, TableModule, TagModule, ButtonModule, SkeletonModule, ToastModule],
+  imports: [CommonModule, RouterModule, CardModule, TableModule, TagModule, ButtonModule, SkeletonModule, ToastModule, ChartModule, ProgressBarModule, ScrollPanelModule, MessageModule],
   providers: [MessageService],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class DashboardComponent implements OnInit {
-  private readonly competitorService = inject(CompetitorService);
-  private readonly signalService = inject(SignalService);
-  private readonly agentService = inject(AgentService);
-  private readonly reportService = inject(ReportService);
+  private readonly analyticsService = inject(AnalyticsService);
   private readonly messageService = inject(MessageService);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  loading = true;
-  competitors: Competitor[] = [];
-  signals: Signal[] = [];
-  logs: AgentRunLog[] = [];
-  reports: WeeklyReport[] = [];
-  recentSignals: Signal[] = [];
-  recentLogs: AgentRunLog[] = [];
+  analytics: DashboardAnalyticsResponse | null = null;
+  isLoading = true;
 
-  totalCompetitors = 0;
-  signalsThisWeek = 0;
-  agentRunsToday = 0;
-  reportsGenerated = 0;
+  sentimentChartData: any = {};
+  sentimentChartOptions: any = {};
+  agentChartData: any = {};
+  agentChartOptions: any = {};
 
   ngOnInit(): void {
     this.loadDashboard();
   }
 
   loadDashboard(): void {
-    this.loading = true;
-    forkJoin({
-      competitors: this.competitorService.getAll(),
-      signals: this.signalService.getRecent(7),
-      logs: this.agentService.getLogs(),
-      reports: this.reportService.getAll()
-    }).subscribe({
-      next: ({ competitors, signals, logs, reports }) => {
-        this.competitors = competitors;
-        this.signals = signals;
-        this.logs = logs;
-        this.reports = reports;
-
-        this.recentSignals = signals.slice(0, 5);
-        this.recentLogs = logs.slice(0, 5);
-
-        this.totalCompetitors = competitors.length;
-        this.signalsThisWeek = signals.length;
-
-        const today = new Date().toDateString();
-        this.agentRunsToday = logs.filter((log) => new Date(log.startedAt).toDateString() === today).length;
-        this.reportsGenerated = reports.length;
-
-        this.loading = false;
+    this.isLoading = true;
+    this.analyticsService.getDashboardAnalytics().subscribe({
+      next: (data) => {
+        this.analytics = data;
+        this.isLoading = false;
+        this.buildChartData();
         this.cdr.detectChanges();
       },
       error: () => {
-        this.loading = false;
+        this.isLoading = false;
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -91,48 +61,66 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  runAllAgents(): void {
-    this.agentService.runAll().subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Agents Started',
-          detail: 'All agents have been started.',
-          life: 3000
-        });
-        this.loadDashboard();
-      },
-      error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to start agents.',
-          life: 5000
-        });
+  buildChartData(): void {
+    if (!this.analytics) return;
+
+    const dist = this.analytics.sentimentDistribution;
+
+    // Sentiment Pie Chart data
+    this.sentimentChartData = {
+      labels: ['Positive', 'Negative', 'Neutral'],
+      datasets: [
+        {
+          data: [dist.positive, dist.negative, dist.neutral],
+          backgroundColor: ['#22C55E', '#EF4444', '#94A3B8']
+        }
+      ]
+    };
+
+    this.sentimentChartOptions = {
+      plugins: {
+        legend: { position: 'bottom' }
       }
-    });
+    };
+
+    // Signals by Agent Bar Chart
+    const agents = this.analytics.signalsByAgent;
+    this.agentChartData = {
+      labels: agents.map((a) => a.agentType),
+      datasets: [
+        {
+          label: 'Signals',
+          data: agents.map((a) => a.count),
+          backgroundColor: '#2563EB'
+        }
+      ]
+    };
+
+    this.agentChartOptions = {
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    };
+  }
+
+
+
+  getMentionPercentage(count: number): number {
+    if (!this.analytics?.trendingTopics?.length) return 0;
+    const max = Math.max(
+      ...this.analytics.trendingTopics.map((t) => t.mentionCount)
+    );
+    if (max === 0) return 0;
+    return Math.round((count / max) * 100);
+  }
+
+  runAllAgents(): void {
+    // To be implemented when needed
   }
 
   generateReports(): void {
-    this.reportService.generateAll().subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Reports Generated',
-          detail: 'All reports have been generated.',
-          life: 3000
-        });
-        this.loadDashboard();
-      },
-      error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to generate reports.',
-          life: 5000
-        });
-      }
-    });
+    // To be implemented when needed
   }
 
   viewSignals(): void {
@@ -172,14 +160,18 @@ export class DashboardComponent implements OnInit {
     return 'info';
   }
 
-  getDuration(log: AgentRunLog): string {
+  getDuration(log: any): string {
     if (!log.completedAt) {
       return 'Running...';
     }
 
     const seconds = Math.max(
       0,
-      Math.floor((new Date(log.completedAt).getTime() - new Date(log.startedAt).getTime()) / 1000)
+      Math.floor(
+        (new Date(log.completedAt).getTime() -
+          new Date(log.startedAt).getTime()) /
+          1000
+      )
     );
 
     return `${seconds}s`;

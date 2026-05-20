@@ -1,113 +1,161 @@
 <p-toast />
 
-<section class="page-header dashboard-header">
-	<div>
-		<h1 class="page-title">Dashboard</h1>
-		<p class="page-subtitle">
-			A polished command center for competitor activity, signal velocity, and weekly reporting.
-		</p>
-	</div>
-	<div class="dashboard-actions">
-		<!-- Note: These admin-only buttons are on topbar now, but we can optionally show them here too -->
-	</div>
-</section>
-
-<div class="dashboard-hero">
-	<div class="dashboard-hero-copy">
-		<div class="dashboard-eyebrow">Operational overview</div>
-		<h2>Track the highest-value signals without losing the bigger picture.</h2>
-		<p>
-			Review activity trends, launch agent runs, and jump directly into the parts of the workflow that need attention.
-		</p>
-	</div>
-	<div class="dashboard-hero-metrics">
-		<div class="hero-metric">
-			<span>Competitors</span>
-			<strong>{{ totalCompetitors }}</strong>
-		</div>
-		<div class="hero-metric">
-			<span>Signals</span>
-			<strong>{{ signalsThisWeek }}</strong>
-		</div>
-		<div class="hero-metric">
-			<span>Reports</span>
-			<strong>{{ reportsGenerated }}</strong>
-		</div>
-	</div>
+<!-- Loading skeleton -->
+<div *ngIf="isLoading" class="dashboard-grid">
+	<p-skeleton height="100px" *ngFor="let i of [1,2,3,4]" />
 </div>
 
-<div class="grid-4 dashboard-stats">
-	<div class="content-section stat-card" style="margin-top: 0;">
-		<div class="stat-label"><i class="pi pi-building"></i> Total Competitors</div>
-		<div class="stat-number">{{ totalCompetitors }}</div>
+<!-- Main dashboard -->
+<div *ngIf="!isLoading && analytics" class="dashboard-wrapper">
+
+	<!-- ROW 1: 4 Stat Cards -->
+	<div class="stats-grid">
+
+		<p-card styleClass="stat-card">
+			<div class="stat-content">
+				<div class="stat-icon blue">
+					<i class="pi pi-bolt"></i>
+				</div>
+				<div>
+					<div class="stat-number">
+						{{ analytics.totalSignalsThisWeek }}
+					</div>
+					<div class="stat-label">
+						Signals This Week
+					</div>
+				</div>
+			</div>
+		</p-card>
+
+		<p-card styleClass="stat-card">
+			<div class="stat-content">
+				<div class="stat-icon green">
+					<i class="pi pi-building"></i>
+				</div>
+				<div>
+					<div class="stat-number">
+						{{ analytics.totalCompetitors }}
+					</div>
+					<div class="stat-label">
+						Competitors
+					</div>
+				</div>
+			</div>
+		</p-card>
+
+		<p-card styleClass="stat-card">
+			<div class="stat-content">
+				<div class="stat-icon orange">
+					<i class="pi pi-server"></i>
+				</div>
+				<div>
+					<div class="stat-number">
+						{{ analytics.totalAgentRunsToday }}
+					</div>
+					<div class="stat-label">
+						Agent Runs Today
+					</div>
+				</div>
+			</div>
+		</p-card>
+
+		<p-card styleClass="stat-card">
+			<div class="stat-content">
+				<div class="stat-icon purple">
+					<i class="pi pi-file-word"></i>
+				</div>
+				<div>
+					<div class="stat-number">
+						{{ analytics.totalReportsGenerated }}
+					</div>
+					<div class="stat-label">
+						Reports Generated
+					</div>
+				</div>
+			</div>
+		</p-card>
+
 	</div>
-	<div class="content-section stat-card" style="margin-top: 0;">
-		<div class="stat-label"><i class="pi pi-bolt"></i> Signals This Week</div>
-		<div class="stat-number">{{ signalsThisWeek }}</div>
+
+	<!-- ROW 2: Charts side by side -->
+	<div class="charts-grid">
+
+		<!-- Sentiment Pie Chart -->
+		<p-card header="Sentiment Distribution">
+			<div class="sentiment-summary">
+				<p-tag value="Positive" severity="success" />
+				<span>{{ analytics.sentimentDistribution.positive }}</span>
+				<p-tag value="Negative" severity="danger" />
+				<span>{{ analytics.sentimentDistribution.negative }}</span>
+				<p-tag value="Neutral" severity="secondary" />
+				<span>{{ analytics.sentimentDistribution.neutral }}</span>
+			</div>
+			<p-chart
+				type="pie"
+				[data]="sentimentChartData"
+				[options]="sentimentChartOptions"
+				height="220"
+			/>
+		</p-card>
+
+		<!-- Signals by Agent Bar Chart -->
+		<p-card header="Signals by Agent">
+			<p-chart
+				type="bar"
+				[data]="agentChartData"
+				[options]="agentChartOptions"
+				height="220"
+			/>
+		</p-card>
+
 	</div>
-	<div class="content-section stat-card" style="margin-top: 0;">
-		<div class="stat-label"><i class="pi pi-server"></i> Agent Runs Today</div>
-		<div class="stat-number">{{ agentRunsToday }}</div>
+
+	<!-- ROW 3: Trending Topics + Recent Signals -->
+	<div class="bottom-grid">
+
+		<!-- Trending Topics -->
+		<p-card header="Trending Topics This Week">
+			<div class="trending-list">
+				<div class="trending-item"
+					*ngFor="let topic of analytics.trendingTopics; let i = index">
+					<div class="trending-rank">
+						{{ i + 1 }}
+					</div>
+					<div class="trending-topic">
+						{{ topic.topic }}
+					</div>
+					<div class="trending-bar-wrapper">
+						<p-progressBar
+							[value]="getMentionPercentage(topic.mentionCount)"
+							[showValue]="false"
+							styleClass="trending-bar"
+						/>
+					</div>
+					<div class="trending-count">
+						{{ topic.mentionCount }}x
+					</div>
+				</div>
+
+				<div *ngIf="analytics.trendingTopics.length === 0"
+					class="empty-trending">
+					No trending topics yet. Run agents to collect signals.
+				</div>
+			</div>
+		</p-card>
+
+		<!-- Recent Signals -->
+		<p-card header="Recent Signals">
+			<div class="trending-list">
+				<div class="signal-item"
+					*ngFor="let topic of analytics.trendingTopics | slice:0:5">
+					<div class="signal-rank">{{ topic.period }}</div>
+					<div class="signal-content">
+						{{ topic.topic }}
+					</div>
+				</div>
+			</div>
+		</p-card>
+
 	</div>
-	<div class="content-section stat-card" style="margin-top: 0;">
-		<div class="stat-label"><i class="pi pi-file"></i> Reports Generated</div>
-		<div class="stat-number">{{ reportsGenerated }}</div>
-	</div>
+
 </div>
-
-<div class="grid-2 dashboard-columns">
-	<p-card header="Recent Signals">
-		<p-table [value]="recentSignals" [tableStyle]="{ 'min-width': '100%' }">
-			<ng-template pTemplate="header">
-				<tr>
-					<th>Agent</th>
-					<th>Title</th>
-					<th>Competitor</th>
-					<th>Importance</th>
-					<th>Time</th>
-				</tr>
-			</ng-template>
-			<ng-template pTemplate="body" let-signal>
-				<tr>
-					<td>{{ signal.agentType }}</td>
-					<td>{{ signal.title }}</td>
-					<td>{{ signal.competitorName }}</td>
-					<td>
-						<p-tag [value]="signal.importanceScore.toString()" [severity]="getImportanceSeverity(signal.importanceScore)" />
-					</td>
-					<td>{{ signal.occurredAt | date: 'short' }}</td>
-				</tr>
-			</ng-template>
-		</p-table>
-	</p-card>
-
-	<p-card header="Recent Agent Logs">
-		<p-table [value]="recentLogs" [tableStyle]="{ 'min-width': '100%' }">
-			<ng-template pTemplate="header">
-				<tr>
-					<th>Agent</th>
-					<th>Competitor</th>
-					<th>Status</th>
-					<th>Signals</th>
-					<th>Duration</th>
-				</tr>
-			</ng-template>
-			<ng-template pTemplate="body" let-log>
-				<tr>
-					<td>{{ log.agentType }}</td>
-					<td>{{ log.competitorName }}</td>
-					<td><p-tag [value]="log.status" [severity]="getStatusSeverity(log.status)" /></td>
-					<td>{{ log.signalsCollected }}</td>
-					<td>{{ getDuration(log) }}</td>
-				</tr>
-			</ng-template>
-		</p-table>
-	</p-card>
-</div>
-
-<p-card header="Quick Actions">
-	<div class="filter-row dashboard-actions-grid">
-		<p-button label="View Signals" icon="pi pi-bolt" [outlined]="true" (onClick)="viewSignals()" />
-		<p-button label="View Reports" icon="pi pi-file-word" [outlined]="true" (onClick)="viewReports()" />
-	</div>
-</p-card>
