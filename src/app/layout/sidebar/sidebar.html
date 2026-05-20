@@ -5,7 +5,7 @@
 		<p>Monitor competitor movement, signals, and weekly reporting from one control panel.</p>
 	</div>
 	<div class="sidebar-menu">
-		<a *ngFor="let item of items" 
+		<a *ngFor="let item of visibleItems" 
 		   [routerLink]="item.routerLink"
 		   routerLinkActive="active"
 		   [routerLinkActiveOptions]="{ exact: true }"

@@ -41,7 +41,12 @@ export const routes: Routes = [
 		loadComponent: () => import('./features/agents/agent-logs/agent-logs').then((m) => m.AgentLogsComponent)
 	},
 	{
+		path: 'settings',
+		canActivate: [authGuard],
+		loadComponent: () => import('./features/settings/settings-page/settings-page.component').then((m) => m.SettingsPageComponent)
+	},
+	{
 		path: '**',
-		redirectTo: 'dashboard'
+		redirectTo: 'login'
 	}
 ];

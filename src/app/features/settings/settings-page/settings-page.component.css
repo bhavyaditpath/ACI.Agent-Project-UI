@@ -1,0 +1,173 @@
+.settings-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1E3A5F;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.25rem;
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.25rem 1.25rem 0;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0 0 0.25rem;
+}
+
+.card-subtitle {
+  font-size: 0.8rem;
+  color: #6B7280;
+  margin: 0;
+  max-width: 500px;
+}
+
+.agent-defaults-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.agent-default-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.agent-default-item:last-child {
+  border-bottom: none;
+}
+
+.agent-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
+}
+
+.agent-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #EFF6FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563EB;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.agent-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.agent-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.agent-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.agent-status-tag {
+  font-size: 0.7rem;
+}
+
+.agent-description {
+  font-size: 0.8rem;
+  color: #6B7280;
+  max-width: 420px;
+}
+
+.agent-updated {
+  font-size: 0.72rem;
+  color: #9CA3AF;
+}
+
+.agent-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.toggle-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  min-width: 130px;
+  text-align: right;
+}
+
+.toggle-label.on {
+  color: #166534;
+}
+
+.toggle-label.off {
+  color: #DC2626;
+}
+
+.save-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #F3F4F6;
+}
+
+.cancel-btn {
+  min-width: 120px;
+}
+
+.save-btn {
+  min-width: 160px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
