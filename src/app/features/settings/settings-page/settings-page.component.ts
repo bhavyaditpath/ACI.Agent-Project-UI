@@ -97,6 +97,7 @@ export class SettingsPageComponent implements OnInit {
           detail: `${agent.agentType} default setting saved.`,
           life: 2500
         });
+        this.loadDefaults();
         this.cdr.detectChanges();
       },
       error: () => {
@@ -147,6 +148,7 @@ export class SettingsPageComponent implements OnInit {
           detail: 'Default agent configuration saved successfully',
           life: 3000
         });
+        this.loadDefaults();
         this.cdr.detectChanges();
       },
       error: () => {
@@ -160,13 +162,5 @@ export class SettingsPageComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
-  }
-
-  resetToDefaults(): void {
-    this.agentDefaults.forEach((agent) => {
-      agent.isEnabledByDefault = true;
-    });
-    this.onToggleChange();
-    this.cdr.detectChanges();
   }
 }

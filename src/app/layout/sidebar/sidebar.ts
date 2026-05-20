@@ -26,7 +26,7 @@ export class SidebarComponent {
     { label: 'Signal Feed', icon: 'pi pi-bolt', routerLink: ['/signals'] },
     { label: 'Reports', icon: 'pi pi-file-word', routerLink: ['/reports'] },
     { label: 'Agent Logs', icon: 'pi pi-server', routerLink: ['/agents'] },
-    { label: 'Settings', icon: 'pi pi-cog', routerLink: ['/settings'], visible: this.authService.isAdmin() }
+    { label: 'Agent Default Settings', icon: 'pi pi-cog', routerLink: ['/settings'], visible: this.authService.isAdmin() }
   ];
 
   get visibleItems(): MenuItem[] {

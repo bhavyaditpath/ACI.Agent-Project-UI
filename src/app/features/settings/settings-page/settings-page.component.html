@@ -23,29 +23,14 @@
         <div>
           <h2 class="card-title">Default Agent Configuration</h2>
           <p class="card-subtitle">
-            These settings apply to all NEW competitors added to the system. Existing competitors are not affected.
+            Control the default agent setup for your workspace in one place.
           </p>
-        </div>
-        <div class="header-actions">
-          <p-button
-            label="Reset All to ON"
-            icon="pi pi-refresh"
-            severity="secondary"
-            [outlined]="true"
-            (onClick)="resetToDefaults()"
-            title="Enable all agents by default"
-          />
         </div>
       </div>
     </ng-template>
 
-    <p-message
-      *ngIf="hasUnsavedChanges"
-      severity="warn"
-      icon="pi pi-exclamation-triangle"
-      text="You have unsaved changes. Click Save Settings to apply."
-      styleClass="w-full mb-4"
-    />
+    <p-message *ngIf="hasUnsavedChanges" severity="warn" icon="pi pi-exclamation-triangle"
+      text="You have unsaved changes. Click Save Settings to apply." styleClass="w-full mb-4" />
 
     <div class="agent-defaults-list">
       <div class="agent-default-item" *ngFor="let agent of agentDefaults">
@@ -56,25 +41,23 @@
           <div class="agent-info">
             <div class="agent-name-row">
               <span class="agent-name">{{ agent.agentType }}</span>
-              <p-tag
-                [value]="agent.isEnabledByDefault ? 'Default ON' : 'Default OFF'"
-                [severity]="agent.isEnabledByDefault ? 'success' : 'danger'"
-                styleClass="agent-status-tag"
-              />
             </div>
             <span class="agent-description">{{ agent.agentDescription }}</span>
-            <span class="agent-updated">
-              Last updated by {{ agent.updatedByUserName }} on {{ agent.updatedAt | date: 'MMM d, yyyy h:mm a' }}
-            </span>
           </div>
         </div>
 
         <div class="agent-right">
-          <span class="toggle-label" [class.on]="agent.isEnabledByDefault" [class.off]="!agent.isEnabledByDefault">
-            {{ agent.isEnabledByDefault ? 'Enabled by default' : 'Disabled by default' }}
+          <div class="agent-info">
+            <div class="agent-name-row">
+              <!-- <span class="agent-name">{{ agent.agentType }}</span> -->
+            </div>
+            <span class="agent-updated">
+            Last updated by {{ agent.updatedByUserName }} on {{ agent.updatedAt | date: 'MMM d, yyyy h:mm a' }}
           </span>
+          </div>
+          
           <p-toggleswitch [(ngModel)]="agent.isEnabledByDefault" (onChange)="onToggleChange()" />
-          <p-button
+          <!-- <p-button
             label="Save"
             icon="pi pi-check"
             size="small"
@@ -84,36 +67,19 @@
             [disabled]="!isAgentDirty(agent) || isSaving || isAgentSaving(agent.agentType)"
             (onClick)="saveSingleAgent(agent)"
             styleClass="agent-save-btn"
-          />
+          /> -->
         </div>
       </div>
     </div>
 
-    <p-message
-      severity="info"
-      icon="pi pi-info-circle"
-      styleClass="w-full mt-4"
-      text="Changing these settings only affects NEW competitors added after saving. To change settings for existing competitors go to Competitors page and click the Configure Agents button."
-    />
+    <p-message severity="info" icon="pi pi-info-circle" styleClass="w-full mt-4"
+      text="Changing these settings only affects NEW competitors added after saving. To change settings for existing competitors go to Competitors page and click the Configure Agents button." />
 
     <div class="save-row">
-      <p-button
-        label="Cancel"
-        icon="pi pi-times"
-        severity="secondary"
-        [outlined]="true"
-        [disabled]="!hasUnsavedChanges || isSaving"
-        (onClick)="cancelChanges()"
-        styleClass="cancel-btn"
-      />
-      <p-button
-        label="Save Settings"
-        icon="pi pi-save"
-        [loading]="isSaving"
-        [disabled]="!hasUnsavedChanges || isSaving"
-        (onClick)="saveAllSettings()"
-        styleClass="save-btn"
-      />
+      <p-button label="Cancel" icon="pi pi-times" severity="secondary" [outlined]="true"
+        [disabled]="!hasUnsavedChanges || isSaving" (onClick)="cancelChanges()" styleClass="cancel-btn" />
+      <p-button label="Save Settings" icon="pi pi-save" [loading]="isSaving" [disabled]="!hasUnsavedChanges || isSaving"
+        (onClick)="saveAllSettings()" styleClass="save-btn" />
     </div>
   </p-card>
 </div>
