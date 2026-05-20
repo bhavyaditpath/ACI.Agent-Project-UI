@@ -19,11 +19,11 @@ export class SettingsService {
     return this.http.get<GlobalAgentDefaultResponse[]>(`${this.baseUrl}/agents/defaults`);
   }
 
-  updateAgentDefault(request: UpdateGlobalAgentDefaultRequest): Observable<unknown> {
-    return this.http.put(`${this.baseUrl}/agents/defaults`, request);
+  updateAgentDefault(request: UpdateGlobalAgentDefaultRequest): Observable<string> {
+    return this.http.put<string>(`${this.baseUrl}/agents/defaults`, request, { responseType: 'text' as 'json' });
   }
 
-  saveAllDefaults(request: UpdateAllGlobalDefaultsRequest): Observable<unknown> {
-    return this.http.put(`${this.baseUrl}/agents/defaults/all`, request);
+  saveAllDefaults(request: UpdateAllGlobalDefaultsRequest): Observable<string> {
+    return this.http.put<string>(`${this.baseUrl}/agents/defaults/all`, request, { responseType: 'text' as 'json' });
   }
 }
