@@ -124,6 +124,10 @@
   flex-shrink: 0;
 }
 
+.agent-save-btn {
+  min-width: 90px;
+}
+
 .toggle-label {
   font-size: 0.8rem;
   font-weight: 500;

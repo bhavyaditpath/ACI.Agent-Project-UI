@@ -32,6 +32,7 @@ export class SettingsPageComponent implements OnInit {
   isSaving = false;
   hasUnsavedChanges = false;
   originalDefaults: Map<string, boolean> = new Map();
+  savingAgentTypes = new Set<string>();
 
   ngOnInit(): void {
     this.loadDefaults();
@@ -66,6 +67,49 @@ export class SettingsPageComponent implements OnInit {
     this.hasUnsavedChanges = this.agentDefaults.some(
       (agent) => agent.isEnabledByDefault !== this.originalDefaults.get(agent.agentType)
     );
+  }
+
+  isAgentDirty(agent: GlobalAgentDefaultResponse): boolean {
+    return agent.isEnabledByDefault !== this.originalDefaults.get(agent.agentType);
+  }
+
+  isAgentSaving(agentType: string): boolean {
+    return this.savingAgentTypes.has(agentType);
+  }
+
+  saveSingleAgent(agent: GlobalAgentDefaultResponse): void {
+    if (!this.isAgentDirty(agent) || this.isSaving || this.isAgentSaving(agent.agentType)) {
+      return;
+    }
+
+    this.savingAgentTypes.add(agent.agentType);
+    this.settingsService.updateAgentDefault({
+      agentType: agent.agentType,
+      isEnabledByDefault: agent.isEnabledByDefault
+    }).subscribe({
+      next: () => {
+        this.savingAgentTypes.delete(agent.agentType);
+        this.originalDefaults.set(agent.agentType, agent.isEnabledByDefault);
+        this.onToggleChange();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Agent Updated',
+          detail: `${agent.agentType} default setting saved.`,
+          life: 2500
+        });
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.savingAgentTypes.delete(agent.agentType);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Save Failed',
+          detail: `Failed to save ${agent.agentType}. Please try again.`,
+          life: 3500
+        });
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   cancelChanges(): void {

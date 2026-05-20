@@ -74,6 +74,17 @@
             {{ agent.isEnabledByDefault ? 'Enabled by default' : 'Disabled by default' }}
           </span>
           <p-toggleswitch [(ngModel)]="agent.isEnabledByDefault" (onChange)="onToggleChange()" />
+          <p-button
+            label="Save"
+            icon="pi pi-check"
+            size="small"
+            severity="secondary"
+            [outlined]="true"
+            [loading]="isAgentSaving(agent.agentType)"
+            [disabled]="!isAgentDirty(agent) || isSaving || isAgentSaving(agent.agentType)"
+            (onClick)="saveSingleAgent(agent)"
+            styleClass="agent-save-btn"
+          />
         </div>
       </div>
     </div>
