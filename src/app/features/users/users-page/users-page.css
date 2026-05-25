@@ -6,11 +6,17 @@
 	margin-bottom: 1rem;
 }
 
-.toolbar-row {
+.filter-row {
 	display: flex;
 	gap: 1rem;
 	flex-wrap: wrap;
-	margin-bottom: 1rem;
+	align-items: flex-end;
+	padding: 1rem;
+	margin-bottom: 1.25rem;
+	border-radius: var(--radius-lg);
+	background: var(--surface);
+	border: 1px solid var(--border-subtle);
+	box-shadow: var(--shadow-md);
 }
 
 .toolbar-field {
@@ -81,6 +87,11 @@
 	.page-header {
 		align-items: flex-start;
 		flex-direction: column;
+	}
+
+	.filter-row {
+		align-items: stretch;
+		padding: 0.85rem;
 	}
 
 	.toolbar-field {

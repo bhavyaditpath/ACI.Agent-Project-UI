@@ -19,6 +19,8 @@ import { UserService } from '../../../core/services/user.service';
 
 type RoleOption = { label: string; value: UserRole | 'all' };
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 @Component({
 	selector: 'app-users-page',
 	imports: [
@@ -65,7 +67,7 @@ export class UsersPageComponent implements OnInit {
 
 	readonly userFormGroup = this.formBuilder.group({
 		username: ['', [Validators.required, Validators.minLength(3)]],
-		email: ['', [Validators.required, Validators.email]],
+		email: ['', [Validators.required, Validators.pattern(EMAIL_PATTERN)]],
 		password: ['', [Validators.required, Validators.minLength(5)]],
 		role: [UserRole.User, [Validators.required]]
 	});
@@ -81,6 +83,11 @@ export class UsersPageComponent implements OnInit {
 			);
 			return matchesRole && matchesSearch;
 		});
+	}
+
+	clearFilters(): void {
+		this.searchText = '';
+		this.selectedRole = 'all';
 	}
 
 	ngOnInit(): void {

@@ -5,7 +5,7 @@
 	<p-button label="Add User" icon="pi pi-user-plus" (onClick)="openCreateDialog()" />
 </div>
 
-<div class="toolbar-row">
+<div class="filter-row">
 	<div class="toolbar-field">
 		<label for="userSearch">Search</label>
 		<input
@@ -29,6 +29,8 @@
 			appendTo="body"
 		/>
 	</div>
+
+	<p-button label="Clear Filters" icon="pi pi-filter-slash" [outlined]="true" (onClick)="clearFilters()" />
 </div>
 
 @if (isLoading) {
@@ -82,9 +84,15 @@
 			}
 
 			<label for="email">Email <span class="required-marker" aria-hidden="true">*</span></label>
-			<input id="email" pInputText formControlName="email" type="email" />
+			<input id="email" pInputText formControlName="email" type="email" autocomplete="email" />
 			@if (userFormGroup.controls.email.touched && userFormGroup.controls.email.invalid) {
-				<small class="required-message">A valid email is required.</small>
+				<small class="required-message">
+					@if (userFormGroup.controls.email.hasError('required')) {
+						Email is required.
+					} @else {
+						Enter a valid email address.
+					}
+				</small>
 			}
 
 			<label for="password">Password @if (!editingUser) {<span class="required-marker" aria-hidden="true">*</span>}</label>
