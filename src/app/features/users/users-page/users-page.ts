@@ -66,7 +66,7 @@ export class UsersPageComponent implements OnInit {
 	readonly userFormGroup = this.formBuilder.group({
 		username: ['', [Validators.required, Validators.minLength(3)]],
 		email: ['', [Validators.required, Validators.email]],
-		password: ['', [Validators.required, Validators.minLength(6)]],
+		password: ['', [Validators.required, Validators.minLength(5)]],
 		role: [UserRole.User, [Validators.required]]
 	});
 
@@ -110,7 +110,7 @@ export class UsersPageComponent implements OnInit {
 
 	openCreateDialog(): void {
 		this.editingUser = null;
-		this.userFormGroup.controls.password.setValidators([Validators.required, Validators.minLength(6)]);
+		this.userFormGroup.controls.password.setValidators([Validators.required, Validators.minLength(5)]);
 		this.userFormGroup.controls.password.updateValueAndValidity({ emitEvent: false });
 		this.userFormGroup.reset({ username: '', email: '', password: '', role: UserRole.User });
 		this.dialogVisible = true;
@@ -118,7 +118,7 @@ export class UsersPageComponent implements OnInit {
 
 	openEditDialog(user: User): void {
 		this.editingUser = user;
-		this.userFormGroup.controls.password.setValidators([Validators.minLength(6)]);
+		this.userFormGroup.controls.password.setValidators([Validators.minLength(5)]);
 		this.userFormGroup.controls.password.updateValueAndValidity({ emitEvent: false });
 		this.userFormGroup.reset({
 			username: user.username,
