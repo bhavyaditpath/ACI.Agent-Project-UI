@@ -1,0 +1,89 @@
+.page-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.toolbar-row {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+	margin-bottom: 1rem;
+}
+
+.toolbar-field {
+	display: grid;
+	gap: 0.35rem;
+	min-width: 240px;
+}
+
+.form-grid {
+	display: grid;
+	gap: 0.8rem;
+}
+
+.form-grid :is(input, .p-select) {
+	width: 100%;
+}
+
+:host ::ng-deep .p-password {
+	display: flex !important;
+	width: 100% !important;
+}
+
+:host ::ng-deep .p-password input {
+	width: 100% !important;
+}
+
+.form-grid label {
+	font-weight: 700;
+	color: var(--text-primary);
+}
+
+.required-marker,
+.required-message {
+	color: #dc2626;
+}
+
+.required-marker {
+	margin-left: 0.25rem;
+	font-weight: 700;
+}
+
+.required-message {
+	font-size: 0.82rem;
+}
+
+.action-buttons {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+.loading-state {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.75rem;
+	padding: 2rem 0;
+	color: var(--text-secondary);
+}
+
+.delete-copy {
+	display: grid;
+	gap: 0.5rem;
+	color: var(--text-primary);
+}
+
+@media (max-width: 760px) {
+	.page-header {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.toolbar-field {
+		min-width: 100%;
+	}
+}

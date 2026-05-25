@@ -1,0 +1,142 @@
+<p-toast />
+
+<div class="page-header">
+	<h1 class="page-title">Users</h1>
+	<p-button label="Add User" icon="pi pi-user-plus" (onClick)="openCreateDialog()" />
+</div>
+
+<div class="toolbar-row">
+	<div class="toolbar-field">
+		<label for="userSearch">Search</label>
+		<input
+			id="userSearch"
+			pInputText
+			type="text"
+			placeholder="Search by username or email"
+			[(ngModel)]="searchText"
+			[ngModelOptions]="{ standalone: true }"
+		/>
+	</div>
+	<div class="toolbar-field">
+		<label for="roleFilter">Role</label>
+		<p-select
+			inputId="roleFilter"
+			[options]="roleOptions"
+			[(ngModel)]="selectedRole"
+			[ngModelOptions]="{ standalone: true }"
+			optionLabel="label"
+			optionValue="value"
+			appendTo="body"
+		/>
+	</div>
+</div>
+
+@if (isLoading) {
+	<div class="loading-state">
+		<i class="pi pi-spin pi-spinner"></i>
+		<span>Loading users...</span>
+	</div>
+} @else {
+		<p-table [value]="filteredUsers" [paginator]="true" [rows]="10" [tableStyle]="{ 'min-width': '100%' }">
+		<ng-template pTemplate="header">
+			<tr>
+				<th>Username</th>
+				<th>Email</th>
+				<th>Role</th>
+				<th>Status</th>
+				<th>Created At</th>
+				<th style="width: 180px;">Actions</th>
+			</tr>
+		</ng-template>
+		<ng-template pTemplate="body" let-user>
+			<tr>
+				<td><strong>{{ user.username }}</strong></td>
+				<td>{{ user.email }}</td>
+				<td><p-tag [value]="user.role" [severity]="getRoleSeverity(user.role)" /></td>
+				<td><p-tag [value]="user.isActive === false ? 'Inactive' : 'Active'" [severity]="getStatusSeverity(user.isActive)" /></td>
+				<td>{{ user.createdAt ? (user.createdAt | date: 'MMM d, yyyy') : '-' }}</td>
+				<td>
+					<div class="action-buttons">
+						<p-button icon="pi pi-pencil" [outlined]="true" severity="info" (onClick)="openEditDialog(user)" />
+						<p-button icon="pi pi-trash" [outlined]="true" severity="danger" (onClick)="confirmDelete(user)" />
+					</div>
+				</td>
+			</tr>
+		</ng-template>
+	</p-table>
+}
+
+<p-dialog
+	header="{{ editingUser ? 'Edit User' : 'Add User' }}"
+	[(visible)]="dialogVisible"
+	[modal]="true"
+	[style]="{ width: '520px' }"
+	(onHide)="closeDialog()"
+>
+	<form [formGroup]="userFormGroup" (ngSubmit)="saveUser()">
+		<div class="form-grid">
+			<label for="username">Username <span class="required-marker" aria-hidden="true">*</span></label>
+			<input id="username" pInputText formControlName="username" />
+			@if (userFormGroup.controls.username.touched && userFormGroup.controls.username.invalid) {
+				<small class="required-message">Username is required and must be at least 3 characters.</small>
+			}
+
+			<label for="email">Email <span class="required-marker" aria-hidden="true">*</span></label>
+			<input id="email" pInputText formControlName="email" type="email" />
+			@if (userFormGroup.controls.email.touched && userFormGroup.controls.email.invalid) {
+				<small class="required-message">A valid email is required.</small>
+			}
+
+			<label for="password">Password @if (!editingUser) {<span class="required-marker" aria-hidden="true">*</span>}</label>
+			<p-password
+				inputId="password"
+				formControlName="password"
+				[feedback]="false"
+				[toggleMask]="true"
+				styleClass="w-full"
+				[inputStyle]="{ width: '100%' }"
+				placeholder="{{ editingUser ? 'Leave blank to keep current password' : 'Enter password' }}"
+			/>
+			@if (userFormGroup.controls.password.touched && userFormGroup.controls.password.invalid) {
+				<small class="required-message">
+					@if (userFormGroup.controls.password.hasError('required')) {
+						Password is required.
+					} @else {
+						Password must be at least 6 characters.
+					}
+				</small>
+			}
+
+			<label for="role">Role <span class="required-marker" aria-hidden="true">*</span></label>
+			<p-select
+				inputId="role"
+				formControlName="role"
+				[options]="roleOptions.slice(1)"
+				optionLabel="label"
+				optionValue="value"
+				appendTo="body"
+			/>
+		</div>
+	</form>
+	<ng-template pTemplate="footer">
+		<p-button label="Cancel" severity="secondary" [outlined]="true" type="button" (onClick)="closeDialog()" />
+		<p-button label="Save" [loading]="isSaving" type="button" (onClick)="saveUser()" />
+	</ng-template>
+</p-dialog>
+
+<p-dialog
+	header="Delete User"
+	[(visible)]="deleteDialogVisible"
+	[modal]="true"
+	[style]="{ width: '460px' }"
+	(onHide)="closeDeleteDialog()"
+>
+	<div class="delete-copy">
+		<p>Delete <strong>{{ userToDelete?.username }}</strong>?</p>
+		<p>This action cannot be undone.</p>
+	</div>
+	<ng-template pTemplate="footer">
+		<p-button label="Cancel" severity="secondary" [outlined]="true" type="button" (onClick)="closeDeleteDialog()" />
+		<p-button label="Delete" severity="danger" [loading]="isDeleting" type="button" (onClick)="deleteUser()" />
+	</ng-template>
+</p-dialog>

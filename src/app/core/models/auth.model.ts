@@ -1,6 +1,6 @@
 export enum UserRole {
   Admin = 'Admin',
-  Viewer = 'Viewer'
+  User = 'User'
 }
 
 export interface LoginRequest {
