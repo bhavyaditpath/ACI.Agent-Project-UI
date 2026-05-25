@@ -45,6 +45,21 @@
 	color: var(--text-primary);
 }
 
+.required-marker,
+.required-message {
+	color: #dc2626;
+}
+
+.required-marker {
+	font-weight: 700;
+	margin-left: 0.25rem;
+}
+
+.required-message {
+	font-size: 0.82rem;
+	line-height: 1.2;
+}
+
 .icon-list {
 	margin: 0.75rem 0 1rem 1rem;
 }

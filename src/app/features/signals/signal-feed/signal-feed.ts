@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
@@ -15,7 +16,7 @@ import { Signal } from '../../../core/models/signal.model';
 
 @Component({
   selector: 'app-signal-feed',
-  imports: [CommonModule, FormsModule, CardModule, SelectModule, TagModule, ButtonModule, MessageModule, ToastModule],
+  imports: [CommonModule, FormsModule, CardModule, SelectModule, DatePickerModule, TagModule, ButtonModule, MessageModule, ToastModule],
   providers: [MessageService],
   templateUrl: './signal-feed.html',
   styleUrl: './signal-feed.css',
@@ -26,14 +27,16 @@ export class SignalFeedComponent implements OnInit {
   private readonly messageService = inject(MessageService);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  readonly daysOptions = [
-    { label: '7 days', value: 7 },
-    { label: '14 days', value: 14 },
-    { label: '30 days', value: 30 }
+  readonly dateRangeOptions = [
+    { label: 'Last 7 Days', value: 'Last7Days' },
+    { label: 'Last 14 Days', value: 'Last14Days' },
+    { label: 'Last 30 Days', value: 'Last30Days' },
+    { label: 'All Time', value: 'AllTime' },
+    { label: 'Custom Range', value: 'Custom' }
   ];
 
   readonly agentOptions = [
-    { label: 'All', value: 'All' },
+    { label: 'All', value: 'all' },
     { label: 'WebWatcher', value: 'WebWatcher' },
     { label: 'JobBoard', value: 'JobBoard' },
     { label: 'RssFeed', value: 'RssFeed' },
@@ -56,8 +59,11 @@ export class SignalFeedComponent implements OnInit {
   filteredSignalsCount = 0;
 
   selectedCompetitor = 'all';
-  selectedDays = 7;
-  selectedAgent = 'All';
+  selectedDateRange = 'Last7Days';
+  customFromDate: Date | null = null;
+  customToDate: Date | null = null;
+  today = new Date();
+  selectedAgent = 'all';
   selectedSentiment = 'all';
 
   ngOnInit(): void {
@@ -77,14 +83,20 @@ export class SignalFeedComponent implements OnInit {
   }
 
   loadSignals(): void {
-    const source$ =
-      this.selectedCompetitor === 'all'
-        ? this.signalService.getRecent(this.selectedDays)
-        : this.signalService.getByCompetitor(this.selectedCompetitor);
+    const { from, to } = this.getDateRange();
+    const allTime = this.selectedDateRange === 'AllTime';
 
-    source$.subscribe((signals) => {
+    this.signalService.getSignals(
+      allTime ? undefined : from?.toISOString(),
+      allTime ? undefined : to?.toISOString(),
+      allTime,
+      this.selectedCompetitor,
+      this.selectedAgent,
+      this.selectedSentiment
+    ).subscribe((signals) => {
       this.signals = signals;
-      this.applyClientFilters();
+      this.filteredSignals = signals;
+      this.filteredSignalsCount = signals.length;
       this.cdr.detectChanges();
     });
   }
@@ -93,37 +105,67 @@ export class SignalFeedComponent implements OnInit {
     this.loadSignals();
   }
 
-  onDaysChange(): void {
+  onDateRangeChange(): void {
+    if (this.selectedDateRange === 'Custom') {
+      if (this.customFromDate && this.customToDate) {
+        this.loadSignals();
+      }
+      return;
+    }
+
     this.loadSignals();
   }
 
   onAgentChange(): void {
-    this.applyClientFilters();
+    this.loadSignals();
   }
 
   onSentimentChange(): void {
-    this.applyClientFilters();
+    this.loadSignals();
   }
 
   clearFilters(): void {
     this.selectedCompetitor = 'all';
-    this.selectedDays = 7;
-    this.selectedAgent = 'All';
+    this.selectedDateRange = 'Last7Days';
+    this.customFromDate = null;
+    this.customToDate = null;
+    this.selectedAgent = 'all';
     this.selectedSentiment = 'all';
     this.loadSignals();
   }
 
-  applyClientFilters(): void {
-    const now = Date.now();
-    const daysMs = this.selectedDays * 24 * 60 * 60 * 1000;
-    this.filteredSignals = this.signals.filter((signal) => {
-      const agentMatch = this.selectedAgent === 'All' || signal.agentType === this.selectedAgent;
-      const daysMatch = now - new Date(signal.occurredAt).getTime() <= daysMs;
-      const sentiment = signal.sentiment ?? 'Neutral';
-      const sentimentMatch = this.selectedSentiment === 'all' || sentiment === this.selectedSentiment;
-      return agentMatch && daysMatch && sentimentMatch;
-    });
-    this.filteredSignalsCount = this.filteredSignals.length;
+  getDateRange(): { from: Date | null; to: Date | null } {
+    const now = new Date();
+    const today = new Date(now.setHours(23, 59, 59, 999));
+
+    switch (this.selectedDateRange) {
+      case 'Last14Days':
+        return {
+          from: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+          to: today
+        };
+      case 'Last30Days':
+        return {
+          from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+          to: today
+        };
+      case 'AllTime':
+        return {
+          from: null,
+          to: null
+        };
+      case 'Custom':
+        return {
+          from: this.customFromDate ?? new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          to: this.customToDate ?? today
+        };
+      case 'Last7Days':
+      default:
+        return {
+          from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          to: today
+        };
+    }
   }
 
   getSentimentSeverity(sentiment: string | null | undefined): 'success' | 'danger' | 'secondary' {

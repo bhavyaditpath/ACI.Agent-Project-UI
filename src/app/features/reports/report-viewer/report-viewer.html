@@ -24,27 +24,61 @@
 	[modal]="true"
 	[style]="{ width: '520px' }"
 	[(visible)]="dialogVisible"
+	(onHide)="resetReportForm()"
 >
-	<div class="report-form">
-		<label>Competitor</label>
-		<p-select
-			[options]="competitorOptions"
-			optionLabel="label"
-			optionValue="value"
-			[(ngModel)]="selectedCompetitorId"
-			placeholder="Select Competitor"
-			appendTo="body"
-		></p-select>
+	<form #reportForm="ngForm" (ngSubmit)="generateReport(reportForm)">
+		<div class="report-form">
+			<label for="competitor">Competitor <span class="required-marker" aria-hidden="true">*</span></label>
+			<p-select
+				inputId="competitor"
+				name="competitor"
+				[options]="competitorOptions"
+				optionLabel="label"
+				optionValue="value"
+				[(ngModel)]="selectedCompetitorId"
+				placeholder="Select Competitor"
+				appendTo="body"
+				required
+				#competitorModel="ngModel"
+			></p-select>
+			@if (competitorModel.invalid && competitorModel.touched) {
+				<small class="required-message">Competitor is required.</small>
+			}
 
-		<label>Week Start Date</label>
-		<p-datepicker [(ngModel)]="weekStartDate" dateFormat="yy-mm-dd" [showIcon]="true" appendTo="body" />
+			<label for="weekStartDate">Week Start Date <span class="required-marker" aria-hidden="true">*</span></label>
+			<p-datepicker
+				inputId="weekStartDate"
+				name="weekStartDate"
+				[(ngModel)]="weekStartDate"
+				dateFormat="yy-mm-dd"
+				[showIcon]="true"
+				appendTo="body"
+				required
+				#weekStartModel="ngModel"
+			/>
+			@if (weekStartModel.invalid && weekStartModel.touched) {
+				<small class="required-message">Week start date is required.</small>
+			}
 
-		<label>Week End Date</label>
-		<p-datepicker [(ngModel)]="weekEndDate" dateFormat="yy-mm-dd" [showIcon]="true" appendTo="body" />
-	</div>
+			<label for="weekEndDate">Week End Date <span class="required-marker" aria-hidden="true">*</span></label>
+			<p-datepicker
+				inputId="weekEndDate"
+				name="weekEndDate"
+				[(ngModel)]="weekEndDate"
+				dateFormat="yy-mm-dd"
+				[showIcon]="true"
+				appendTo="body"
+				required
+				#weekEndModel="ngModel"
+			/>
+			@if (weekEndModel.invalid && weekEndModel.touched) {
+				<small class="required-message">Week end date is required.</small>
+			}
+		</div>
+	</form>
 	<ng-template pTemplate="footer">
-		<p-button label="Cancel" severity="secondary" (onClick)="dialogVisible = false" />
-		<p-button label="Generate" [loading]="generatingSingle" (onClick)="generateReport()" />
+		<p-button label="Cancel" severity="secondary" type="button" (onClick)="dialogVisible = false" />
+		<p-button label="Generate" [loading]="generatingSingle" type="submit" (onClick)="generateReport(reportForm)" />
 	</ng-template>
 </p-dialog>
 

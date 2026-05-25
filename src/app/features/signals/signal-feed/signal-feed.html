@@ -16,14 +16,38 @@
 	></p-select>
 
 	<p-select
-		[options]="daysOptions"
-		[(ngModel)]="selectedDays"
+		[options]="dateRangeOptions"
+		[(ngModel)]="selectedDateRange"
 		optionLabel="label"
 		optionValue="value"
-		placeholder="Days"
+		placeholder="Date Range"
 		appendTo="body"
-		(onChange)="onDaysChange()"
+		(onChange)="onDateRangeChange()"
 	></p-select>
+
+	@if (selectedDateRange === 'Custom') {
+		<p-datepicker
+			[(ngModel)]="customFromDate"
+			placeholder="From Date"
+			dateFormat="yy-mm-dd"
+			[showIcon]="true"
+			styleClass="w-full"
+			appendTo="body"
+			[maxDate]="today"
+			(onSelect)="onDateRangeChange()"
+		/>
+
+		<p-datepicker
+			[(ngModel)]="customToDate"
+			placeholder="To Date"
+			dateFormat="yy-mm-dd"
+			[showIcon]="true"
+			styleClass="w-full"
+			appendTo="body"
+			[maxDate]="today"
+			(onSelect)="onDateRangeChange()"
+		/>
+	}
 
 	<p-select
 		[options]="agentOptions"
@@ -63,7 +87,7 @@
 							styleClass="sentiment-badge"
 						/>
 					</div>
-					<span class="signal-time">{{ getTimeAgo(signal.occurredAt) }}</span>
+					<span class="signal-time">{{ getTimeAgo(signal.createdAt) }}</span>
 				</div>
 
 				<h3 [title]="signal.title">{{ signal.title }}</h3>

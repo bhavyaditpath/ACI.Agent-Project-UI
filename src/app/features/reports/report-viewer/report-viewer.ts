@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { finalize, forkJoin } from 'rxjs';
 import { AccordionModule } from 'primeng/accordion';
 import { DialogModule } from 'primeng/dialog';
@@ -58,6 +58,8 @@ export class ReportViewerComponent implements OnInit {
   generatingAll = false;
   generatingSingle = false;
 
+  @ViewChild('reportForm') private reportForm?: NgForm;
+
   selectedCompetitorId = '';
   weekStartDate: Date | null = null;
   weekEndDate: Date | null = null;
@@ -89,7 +91,19 @@ export class ReportViewerComponent implements OnInit {
   }
 
   openGenerateDialog(): void {
+    this.resetReportForm();
     this.dialogVisible = true;
+  }
+
+  resetReportForm(): void {
+    this.selectedCompetitorId = '';
+    this.weekStartDate = null;
+    this.weekEndDate = null;
+    this.reportForm?.resetForm({
+      competitor: '',
+      weekStartDate: null,
+      weekEndDate: null
+    });
   }
 
   generateAll(): void {
@@ -122,13 +136,15 @@ export class ReportViewerComponent implements OnInit {
       });
   }
 
-  generateReport(): void {
+  generateReport(form: NgForm): void {
     if (
+      form.invalid ||
       !this.selectedCompetitorId ||
       !this.weekStartDate ||
       !this.weekEndDate ||
       this.generatingSingle
     ) {
+      form.control.markAllAsTouched();
       return;
     }
 
