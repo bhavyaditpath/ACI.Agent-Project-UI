@@ -43,6 +43,8 @@ export class ReportViewerComponent implements OnInit {
   private readonly authService = inject(Auth);
   private readonly messageService = inject(MessageService);
   private readonly cdr = inject(ChangeDetectorRef);
+  readonly minSelectableDate = new Date(2010, 0, 1);
+  readonly today = new Date();
 
   get isAdmin(): boolean {
     return this.authService.isAdmin();
@@ -69,6 +71,26 @@ export class ReportViewerComponent implements OnInit {
       return this.reports;
     }
     return this.reports.filter((r) => r.competitorId === this.selectedCompetitor);
+  }
+
+  get isWeekDateRangeInvalid(): boolean {
+    if (!this.weekStartDate || !this.weekEndDate) {
+      return false;
+    }
+
+    return (
+      this.weekStartDate > this.weekEndDate ||
+      !this.isSelectableDate(this.weekStartDate) ||
+      !this.isSelectableDate(this.weekEndDate)
+    );
+  }
+
+  get weekStartDateMax(): Date {
+    return this.weekEndDate ?? this.today;
+  }
+
+  get weekEndDateMin(): Date {
+    return this.weekStartDate ?? this.minSelectableDate;
   }
 
   ngOnInit(): void {
@@ -148,6 +170,17 @@ export class ReportViewerComponent implements OnInit {
       return;
     }
 
+    if (this.isWeekDateRangeInvalid) {
+      form.control.markAllAsTouched();
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Invalid Date Range',
+        detail: 'Select dates between Jan 1, 2010 and today, and keep Week End Date on or after Week Start Date.',
+        life: 5000
+      });
+      return;
+    }
+
     this.generatingSingle = true;
     this.reportService
       .generate({
@@ -183,5 +216,9 @@ export class ReportViewerComponent implements OnInit {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  private isSelectableDate(date: Date): boolean {
+    return date >= this.minSelectableDate && date <= this.today;
   }
 }

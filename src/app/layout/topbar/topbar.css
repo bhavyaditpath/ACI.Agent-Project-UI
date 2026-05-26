@@ -284,6 +284,16 @@
 	margin-bottom: 1rem;
 }
 
+.date-range-message {
+	display: block;
+	grid-column: 1 / -1;
+	color: #dc2626;
+	font-size: 0.8rem;
+	line-height: 1.2;
+	margin-top: -0.25rem;
+	margin-bottom: 0.25rem;
+}
+
 .w-full {
 	width: 100%;
 }

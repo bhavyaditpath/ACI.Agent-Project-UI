@@ -26,6 +26,7 @@ export class SignalFeedComponent implements OnInit {
   private readonly competitorService = inject(CompetitorService);
   private readonly messageService = inject(MessageService);
   private readonly cdr = inject(ChangeDetectorRef);
+  readonly minSelectableDate = new Date(2010, 0, 1);
 
   readonly dateRangeOptions = [
     { label: 'Last 7 Days', value: 'Last7Days' },
@@ -103,6 +104,16 @@ export class SignalFeedComponent implements OnInit {
 
   onDateRangeChange(): void {
     if (this.selectedDateRange === 'Custom') {
+      if (this.isCustomDateRangeInvalid) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Invalid Date Range',
+          detail: 'Select dates between Jan 1, 2010 and today, and keep To Date on or after From Date.',
+          life: 5000
+        });
+        return;
+      }
+
       if (this.customFromDate && this.customToDate) {
         this.loadSignals();
       }
@@ -130,6 +141,18 @@ export class SignalFeedComponent implements OnInit {
     this.loadSignals();
   }
 
+  get isCustomDateRangeInvalid(): boolean {
+    if (this.selectedDateRange !== 'Custom' || !this.customFromDate || !this.customToDate) {
+      return false;
+    }
+
+    return (
+      this.customFromDate > this.customToDate ||
+      !this.isSelectableDate(this.customFromDate) ||
+      !this.isSelectableDate(this.customToDate)
+    );
+  }
+
   private applyClientFilters(): void {
     this.filteredSignals = this.signals.filter((signal) => {
       const byCompetitor = this.selectedCompetitor === 'all' || signal.competitorId === this.selectedCompetitor;
@@ -146,6 +169,10 @@ export class SignalFeedComponent implements OnInit {
 
   private normalizeValue(value: string): string {
     return value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+
+  private isSelectableDate(date: Date): boolean {
+    return date >= this.minSelectableDate && date <= this.today;
   }
 
   getDateRange(): { from: Date | null; to: Date | null } {

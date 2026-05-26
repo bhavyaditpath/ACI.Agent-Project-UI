@@ -33,7 +33,8 @@
 			[showIcon]="true"
 			styleClass="w-full"
 			appendTo="body"
-			[maxDate]="today"
+			[minDate]="minSelectableDate"
+			[maxDate]="customToDate || today"
 			(onSelect)="onDateRangeChange()"
 		/>
 
@@ -44,9 +45,14 @@
 			[showIcon]="true"
 			styleClass="w-full"
 			appendTo="body"
+			[minDate]="customFromDate || minSelectableDate"
 			[maxDate]="today"
 			(onSelect)="onDateRangeChange()"
 		/>
+
+		@if (isCustomDateRangeInvalid) {
+			<small class="date-range-message">Select dates between Jan 1, 2010 and today, and keep To Date on or after From Date.</small>
+		}
 	}
 
 	<p-select

@@ -53,6 +53,8 @@
 				dateFormat="yy-mm-dd"
 				[showIcon]="true"
 				appendTo="body"
+				[minDate]="minSelectableDate"
+				[maxDate]="weekStartDateMax"
 				required
 				#weekStartModel="ngModel"
 			/>
@@ -68,11 +70,16 @@
 				dateFormat="yy-mm-dd"
 				[showIcon]="true"
 				appendTo="body"
+				[minDate]="weekEndDateMin"
+				[maxDate]="today"
 				required
 				#weekEndModel="ngModel"
 			/>
 			@if (weekEndModel.invalid && weekEndModel.touched) {
 				<small class="required-message">Week end date is required.</small>
+			}
+			@if (weekStartDate && weekEndDate && isWeekDateRangeInvalid) {
+				<small class="required-message">Select dates between Jan 1, 2010 and today, and keep Week End Date on or after Week Start Date.</small>
 			}
 		</div>
 	</form>

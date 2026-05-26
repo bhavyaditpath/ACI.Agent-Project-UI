@@ -98,7 +98,10 @@
 				[showIcon]="true"
 				styleClass="w-full"
 				appendTo="body"
-				[maxDate]="today"
+				[minDate]="minSelectableDate"
+				[maxDate]="customToDate || today"
+				(onSelect)="onCustomDateRangeTouched()"
+				(onBlur)="onCustomDateRangeTouched()"
 			/>
 		</div>
 		<div class="field">
@@ -110,9 +113,15 @@
 				[showIcon]="true"
 				styleClass="w-full"
 				appendTo="body"
+				[minDate]="customFromDate || minSelectableDate"
 				[maxDate]="today"
+				(onSelect)="onCustomDateRangeTouched()"
+				(onBlur)="onCustomDateRangeTouched()"
 			/>
 		</div>
+		@if (customDateRangeMessage) {
+			<small class="date-range-message">{{ customDateRangeMessage }}</small>
+		}
 	</div>
 
 	<!-- Helper text -->
@@ -132,6 +141,7 @@
 		<p-button
 			label="Run Agents"
 			icon="pi pi-play"
+			[disabled]="runningAll || !canRunAllAgents"
 			(onClick)="confirmRunAll()"
 		/>
 	</ng-template>
