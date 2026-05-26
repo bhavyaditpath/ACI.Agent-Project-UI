@@ -89,20 +89,16 @@ export class SignalFeedComponent implements OnInit {
     this.signalService.getSignals(
       allTime ? undefined : from?.toISOString(),
       allTime ? undefined : to?.toISOString(),
-      allTime,
-      this.selectedCompetitor,
-      this.selectedAgent,
-      this.selectedSentiment
+      allTime
     ).subscribe((signals) => {
       this.signals = signals;
-      this.filteredSignals = signals;
-      this.filteredSignalsCount = signals.length;
+      this.applyClientFilters();
       this.cdr.detectChanges();
     });
   }
 
   onCompetitorChange(): void {
-    this.loadSignals();
+    this.applyClientFilters();
   }
 
   onDateRangeChange(): void {
@@ -117,11 +113,11 @@ export class SignalFeedComponent implements OnInit {
   }
 
   onAgentChange(): void {
-    this.loadSignals();
+    this.applyClientFilters();
   }
 
   onSentimentChange(): void {
-    this.loadSignals();
+    this.applyClientFilters();
   }
 
   clearFilters(): void {
@@ -132,6 +128,24 @@ export class SignalFeedComponent implements OnInit {
     this.selectedAgent = 'all';
     this.selectedSentiment = 'all';
     this.loadSignals();
+  }
+
+  private applyClientFilters(): void {
+    this.filteredSignals = this.signals.filter((signal) => {
+      const byCompetitor = this.selectedCompetitor === 'all' || signal.competitorId === this.selectedCompetitor;
+      const byAgent = this.selectedAgent === 'all' || this.normalizeValue(signal.agentType) === this.normalizeValue(this.selectedAgent);
+      const bySentiment =
+        this.selectedSentiment === 'all' ||
+        this.normalizeValue(signal.sentiment ?? 'Neutral') === this.normalizeValue(this.selectedSentiment);
+
+      return byCompetitor && byAgent && bySentiment;
+    });
+
+    this.filteredSignalsCount = this.filteredSignals.length;
+  }
+
+  private normalizeValue(value: string): string {
+    return value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
   }
 
   getDateRange(): { from: Date | null; to: Date | null } {
