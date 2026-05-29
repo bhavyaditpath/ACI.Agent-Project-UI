@@ -116,9 +116,11 @@
 							Open Source <i class="pi pi-arrow-up-right"></i>
 						</a>
 
-						<a [href]="signal.discussionUrl" class="signal-link" target="_blank" rel="noopener noreferrer">
-							Open Post <i class="pi pi-arrow-up-right"></i>
-						</a>
+							@if (signal.discussionUrl && shouldShowDiscussionLink(signal.agentType)) {
+								<a [href]="signal.discussionUrl" class="signal-link" target="_blank" rel="noopener noreferrer">
+									Open Post <i class="pi pi-arrow-up-right"></i>
+								</a>
+							}
 					</div>
 				}
 			</div>

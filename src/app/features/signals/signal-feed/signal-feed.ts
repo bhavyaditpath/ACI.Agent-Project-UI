@@ -235,6 +235,11 @@ export class SignalFeedComponent implements OnInit {
     }
   }
 
+  shouldShowDiscussionLink(agentType: string): boolean {
+    const normalizedAgentType = this.normalizeValue(agentType);
+    return normalizedAgentType === 'reddit' || normalizedAgentType === 'hackernews';
+  }
+
   getImportanceStars(score: number): string {
     return '★'.repeat(Math.min(3, Math.max(1, score)));
   }
