@@ -97,7 +97,7 @@
 				</div>
 
 				<h3 [title]="signal.title">{{ signal.title }}</h3>
-				<p class="signal-desc">{{ (signal.description || 'No description available').slice(0, 100) }}...</p>
+				<p class="signal-desc m-0">{{ (signal.description || 'No description available').slice(0, 100) }}...</p>
 
 				<div class="signal-footer">
 					<div class="footer-left">
@@ -111,9 +111,15 @@
 				</div>
 
 				@if (signal.sourceUrl) {
-					<a [href]="signal.sourceUrl" class="signal-link" target="_blank" rel="noopener noreferrer">
-						Open Source <i class="pi pi-arrow-up-right"></i>
-					</a>
+					<div class="d-flex justify-content-between align-items-center">
+						<a [href]="signal.sourceUrl" class="signal-link" target="_blank" rel="noopener noreferrer">
+							Open Source <i class="pi pi-arrow-up-right"></i>
+						</a>
+
+						<a [href]="signal.discussionUrl" class="signal-link" target="_blank" rel="noopener noreferrer">
+							Open Post <i class="pi pi-arrow-up-right"></i>
+						</a>
+					</div>
 				}
 			</div>
 		}

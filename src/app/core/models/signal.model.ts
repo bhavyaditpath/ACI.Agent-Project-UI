@@ -8,6 +8,7 @@ export interface Signal {
   title: string;
   description?: string;
   sourceUrl?: string;
+  discussionUrl?: string;
   importanceScore: number;
   confidenceScore: number;
   occurredAt: string;
